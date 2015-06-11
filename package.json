@@ -12,7 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "commander": "^2.8.1",
+    "mysql": "^2.7.0",
+    "password-generator": "^1.0.0",
     "q": "^1.4.1",
+    "rimraf": "^2.4.0",
     "underscore": "^1.8.3"
   }
 }
