@@ -134,7 +134,10 @@ function findParentConfigs(site) {
  */
 function createConfigs(site, defaults, configs) {
 	return Q.fcall(function() {
-		var instanceConfigPath = path.join(program.basedir, site, site, program.instance, 'config/vufind');
+		var instanceConfigPath = (program.instance === 'live')
+			? path.join(program.basedir, site, program.instance, 'config/vufind')
+			: path.join(program.basedir, site, site, program.instance, 'config/vufind');
+
 		console.log('creating instance config dir %s', instanceConfigPath);
 		rimraf.sync(instanceConfigPath);
 		mkdirp.sync(instanceConfigPath);
