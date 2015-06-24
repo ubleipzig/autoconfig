@@ -1,12 +1,13 @@
 {
   "name": "autoconfig",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "generates config for deployed instances",
   "scripts": {
     "test": "mocha"
   },
   "bin": {
-    "autoconfig": "./bin/autoconfig"
+    "autoconfig": "./bin/autoconfig",
+    "autoconfig-vufind2": "./bin/autoconfig-vufind2"
   },
   "author": "seltmann@ub.uni-leipzig.de",
   "license": "ISC",
