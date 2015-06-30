@@ -154,16 +154,15 @@ function createConfigs(site, defaults, configs) {
 			};
 			return configtools.create(options).then(function (options) {
 				console.log('including %s', options.configName);
+				if (!defaults[options.configName]) defaults[options.configName] = {};
 				try {
-					var configurator = require('../lib/vufind2/' + options.configName);
+					var c = require('../lib/vufind2/' + options.configName);
+					return c(options, defaults[options.configName]);
 				} catch (err) {
 					var deferred = Q.defer();
-					deferred.resolve();
+					deferred.resolve(defaults[options.configName]);
 					return deferred.promise;
 				}
-				if (!defaults[options.configName]) defaults[options.configName] = {};
-				return configurator(options, defaults[options.configName]);
-
 			}).then(function(config) {
 				return configtools.append(config, options.destConfig);
 			})
