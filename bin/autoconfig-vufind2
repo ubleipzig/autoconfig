@@ -43,9 +43,10 @@ var fsOptions = {
 var promise = Q.all(_.map(program.args, function (site) {
 	return Q.all([
 		fetchDefaults(site),
-		findParentConfigs(site)
+		findParentConfigs(site),
+		findParentLanguages(site)
 	]).then(function (result) {
-		return createConfigs(site, result[0], result[1]);
+		return createConfigs(site, result[0], result[1], result[2]);
 	}).catch(function (err) {
 		console.error('could not configure site ' + site);
 		console.error(err);
@@ -124,6 +125,26 @@ function findParentConfigs(site) {
 	return deferred.promise;
 }
 
+function findParentLanguages(site) {
+	var deferred = Q.defer();
+	var languagesPath = path.join(program.basedir, site, site, 'languages');
+
+	console.log('finding parent languages in %s', languagesPath);
+
+	fs.readdir(languagesPath, function (err, data) {
+		if (err) {
+			deferred.reject(err);
+		} else {
+			deferred.resolve(_.map(data, function(file) {
+				return path.join(languagesPath, file);
+			}));
+		}
+	});
+
+	return deferred.promise;
+}
+
+
 /**
  * creates a configs based on the config-name's implementation and default configuration
  *
@@ -132,11 +153,15 @@ function findParentConfigs(site) {
  * @param configs
  * @returns {promise|*|Q.promise}
  */
-function createConfigs(site, defaults, configs) {
+function createConfigs(site, defaults, configs, languages) {
 	return Q.fcall(function() {
 		var instanceConfigPath = (program.instance === 'live')
 			? path.join(program.basedir, site, program.instance, 'config/vufind')
 			: path.join(program.basedir, site, site, program.instance, 'config/vufind');
+
+		var instanceLanguagesPath = (program.instance === 'live')
+			? path.join(program.basedir, site, program.instance, 'languages')
+			: path.join(program.basedir, site, site, program.instance, 'languages');
 
 		console.log('creating instance config dir %s', instanceConfigPath);
 		rimraf.sync(instanceConfigPath);
@@ -152,7 +177,7 @@ function createConfigs(site, defaults, configs) {
 				configName: item,
 				ext: path.extname(item)
 			};
-			return configtools.create(options).then(function (options) {
+			return configtools.createConfig(options).then(function (options) {
 				console.log('including %s', options.configName);
 				if (!defaults[options.configName]) defaults[options.configName] = {};
 				try {
@@ -164,9 +189,22 @@ function createConfigs(site, defaults, configs) {
 					return deferred.promise;
 				}
 			}).then(function(config) {
-				return configtools.append(config, options.destConfig);
+				return configtools.appendConfig(config, options.destConfig);
 			})
 		})).then(function() {
+			console.log('creating instance config dir %s', instanceLanguagesPath);
+			rimraf.sync(instanceLanguagesPath);
+			mkdirp.sync(instanceLanguagesPath);
+			return Q.all(_.map(languages, function (filePath) {
+				var item = path.basename(filePath);
+				var options = {
+					instance: program.instance,
+					destConfig: path.join(instanceLanguagesPath, item),
+					languageName: item
+				};
+				return configtools.createLanguage(options);
+			}));
+		}).then(function() {
 			return updateDefaults(site, defaults);
 		});
 	});
