@@ -184,5 +184,7 @@ from the configuration template first.**
 
 * support for yaml format
 * overwriting configuration template when commandline parameters are provided
+* tests
+* make it more generic usable
 
 [1]: [http://vufind-org.github.io/vufind/]
