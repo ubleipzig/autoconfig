@@ -41,12 +41,13 @@ Q.all(_.map(program.args, function (site) {
 		configtools.fetchDefaults(site),
 		configtools.findParentConfigs(site),
 		configtools.findParentLanguages(site),
-		composertools.composer(site),
 		grunttools.foundation(site)
 	]).then(function (result) {
 		return configtools.createConfigs(site, result[0], result[1], result[2]);
 	}).then(function(result) {
 		return configtools.updateDefaults(site, result);
+	]).then(function (result) {
+       	return composertools.composer(site, result);
 	}).catch(function (err) {
 		console.error('could not configure site ' + site);
 		console.error(err);
