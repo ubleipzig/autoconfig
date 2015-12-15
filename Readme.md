@@ -11,7 +11,7 @@ the currently supported software is [vufind2][1]
 this package is not part of the public npm-registry. its published to the private registry
 of the university library of leipzig. use this registry as follows:
 
-    npm --registry http://docker.ub.intern.uni-leipzig.de/npm install -g autoconfig
+    npm --registry https://docker.ub.intern.uni-leipzig.de/npm install -g autoconfig
 
 it is recommended to install it as superuser, but it is advised to be run as non-root
 though.

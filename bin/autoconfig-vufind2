@@ -7,6 +7,7 @@ var program = require('commander')
 	, path = require('path')
 	, configtools = require('../lib/vufind2/configtools')
 	, grunttools = require('../lib/vufind2/grunttools')
+	, composertools = require('../lib/vufind2/composertools')
 ;
 
 program
