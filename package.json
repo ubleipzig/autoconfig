@@ -1,6 +1,6 @@
 {
   "name": "autoconfig",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "generates config for deployed instances",
   "scripts": {
     "test": "mocha"
