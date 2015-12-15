@@ -40,6 +40,7 @@ Q.all(_.map(program.args, function (site) {
 		configtools.fetchDefaults(site),
 		configtools.findParentConfigs(site),
 		configtools.findParentLanguages(site),
+		composertools.composer(site),
 		grunttools.foundation(site)
 	]).then(function (result) {
 		return configtools.createConfigs(site, result[0], result[1], result[2]);
