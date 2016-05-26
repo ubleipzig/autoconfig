@@ -4,6 +4,7 @@
   "description": "generates config for deployed instances",
   "scripts": {
     "test": "mocha",
+    "ci": "istanbul cover _mocha -- --reporter mocha-jenkins-reporter",
     "test-debug": "mocha --debug-brk"
   },
   "bin": {
@@ -24,7 +25,9 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "istanbul": "^0.4.3",
     "mocha": "^2.5.3",
+    "mocha-jenkins-reporter": "^0.2.2",
     "should": "^8.4.0"
   }
 }
