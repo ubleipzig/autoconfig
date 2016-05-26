@@ -37,13 +37,13 @@ if (!program.args) {
 }
 
 Q.all(_.map(program.args, function (site) {
-	return Q.all([
+	return Q.spread([
 		configtools.fetchDefaults(site),
 		configtools.findParentConfigs(site),
 		configtools.findParentLanguages(site),
 		grunttools.foundation(site)
-	]).then(function (result) {
-		return configtools.createConfigs(site, result[0], result[1], result[2]);
+	], function (defaults, configs, languages) {
+		return configtools.createConfigs(site, defaults, configs, languages);
 	}).then(function(result) {
 		return configtools.updateDefaults(site, result);
 	}).then(function (result) {

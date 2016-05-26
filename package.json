@@ -3,7 +3,8 @@
   "version": "1.0.18",
   "description": "generates config for deployed instances",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "test-debug": "mocha --debug-brk"
   },
   "bin": {
     "autoconfig": "./bin/autoconfig",
@@ -18,7 +19,12 @@
     "mysql": "^2.7.0",
     "password-generator": "^1.0.0",
     "q": "^1.4.1",
+    "recursive-readdir": "^2.0.0",
     "rimraf": "^2.4.0",
     "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "mocha": "^2.5.3",
+    "should": "^8.4.0"
   }
 }
