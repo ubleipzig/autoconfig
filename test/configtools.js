@@ -9,15 +9,21 @@ var should = require('should')
 	, rimraf = require('rimraf')
 	, mkdirp = require('mkdirp')
 	, Q = require('q')
+	, readdir = require('recursive-readdir')
 	;
 
 
 describe('vufind2', function () {
 
 	var site = 'myAwesomeInstance';
+	var instance = 'staging';
 	var basedir = path.join(process.cwd(), '.tmp');
-	var configDir = path.join(basedir, site, site, 'config', 'vufind');
-	var languageDir = path.join(basedir, site, site, 'languages');
+	var siteDir = path.join(basedir, site, site);
+	var configDir = path.join(siteDir, 'config', 'vufind');
+	var languageDir = path.join(siteDir, 'languages');
+	var instanceDir = path.join(siteDir, instance);
+	var instanceConfigDir = path.join(instanceDir, 'config', 'vufind');
+	var instanceLanguageDir = path.join(instanceDir, 'languages');
 	var languageFilesToResolve = [];
 	var configFilesToResolve = [];
 
@@ -113,14 +119,66 @@ describe('vufind2', function () {
 		});
 
 		describe('createConfigs', function() {
-			program.instance = 'staging';
+			var createdConfigs,
+				createdLanguages;
+			before(function(done) {
+				program.instance = instance;
+				configtools.createConfigs(site, {}, configFilesToResolve, languageFilesToResolve).then(function() {
+					Q.spread([
+						readInis(instanceLanguageDir),
+						readInis(instanceConfigDir)
+					], function(lang, conf) {
+						createdLanguages = lang;
+						createdConfigs = conf;
+						done();
+					}).catch(done);
+				});
+			});
 
-			it('should create 3 config inis and 12 language inis without defaults', function(done) {
-				configtools.createConfigs(site, {}, configFilesToResolve, languageFilesToResolve).then(function(createdFiles) {
-					Object.keys(createdFiles).should.have.lengthOf(configFilesToResolve.length);
+			it('should create 3 config inis without defaults', function(done) {
+				Object.keys(createdConfigs).should.have.lengthOf(configFilesToResolve.length);
+				done();
+			});
+
+			it('should create 12 language inis', function(done) {
+				Object.keys(createdLanguages).should.have.lengthOf(languageFilesToResolve.length);
+				done();
+			});
+
+
+			it('should reference parent language files from instanceLanguageBasePath', function(done) {
+				Q.all(createdLanguages.map(function(languageFile) {
+					return Q.all(fs.readFileSync(languageFile, {encoding: 'utf-8'}).split('\n').map(function(line) {
+						var deferred = Q.defer();
+						var match = line.match(/^@parent_ini\s*=\s*"([^"]+)"/, 'm');
+						if (match === null) {
+							deferred.resolve();
+						} else {
+							var parentFile = path.resolve(instanceLanguageDir, match[1]);
+							fs.stat(parentFile, function (err, stat) {
+								if (err) return deferred.reject(err);
+								deferred.resolve(parentFile);
+							});
+						}
+						return deferred.promise;
+					}));
+				})).then(function(data) {
 					done();
-				}).catch(done);
+				});
 			});
 		});
 	});
 });
+
+function readInis(dir) {
+	var deferred = Q.defer()
+	try {
+		readdir(dir, function(err, list) {
+			if (err) deferred.reject(err);
+			deferred.resolve(list);
+		});
+	} catch (err) {
+		deferred.reject(err);
+	}
+	return deferred.promise;
+}
