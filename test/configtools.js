@@ -1,17 +1,18 @@
+/*global describe before it*/
+
 'use strict';
 
-var should = require('should')
-	, _ = require('underscore')
+var _ = require('underscore')
 	, configtools = require('../lib/vufind2/configtools')
 	, program = require('commander')
 	, fs = require('fs')
 	, path = require('path')
-	, rimraf = require('rimraf')
 	, mkdirp = require('mkdirp')
 	, Q = require('q')
 	, readdir = require('recursive-readdir')
 	;
 
+require('should');
 
 describe('vufind2', function () {
 
@@ -29,7 +30,7 @@ describe('vufind2', function () {
 
 
 	before(function (done) {
-		fs.stat(basedir, function (err, stats) {
+		fs.stat(basedir, function (err) {
 			if (err) {
 				mkdirp.sync(configDir);
 				mkdirp.sync(languageDir);
@@ -42,8 +43,10 @@ describe('vufind2', function () {
 				languageFilesToResolve.push(file);
 			}
 
+			file = null;
+
 			for (var i = 1; i < 4; i++) {
-				var folder = path.join(languageDir, 'subFolder' + i)
+				var folder = path.join(languageDir, 'subFolder' + i);
 				mkdirp.sync(folder);
 
 				for (var j = 0; files[j]; j++) {
@@ -155,14 +158,14 @@ describe('vufind2', function () {
 							deferred.resolve();
 						} else {
 							var parentFile = path.resolve(instanceLanguageDir, match[1]);
-							fs.stat(parentFile, function (err, stat) {
+							fs.stat(parentFile, function (err) {
 								if (err) return deferred.reject(err);
 								deferred.resolve(parentFile);
 							});
 						}
 						return deferred.promise;
 					}));
-				})).then(function(data) {
+				})).then(function() {
 					done();
 				});
 			});
@@ -171,7 +174,7 @@ describe('vufind2', function () {
 });
 
 function readInis(dir) {
-	var deferred = Q.defer()
+	var deferred = Q.defer();
 	try {
 		readdir(dir, function(err, list) {
 			if (err) deferred.reject(err);

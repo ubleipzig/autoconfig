@@ -1,14 +1,14 @@
 #!/usr/bin/env node
+
 'use strict';
 
-var program = require('commander')
-	, Q = require('q')
-	, _ = require('underscore')
-	, path = require('path')
-	, configtools = require('../lib/vufind2/configtools')
-	, grunttools = require('../lib/vufind2/grunttools')
-	, composertools = require('../lib/vufind2/composertools')
-;
+var program = require('commander'),
+	Q = require('q'),
+	_ = require('underscore'),
+	path = require('path'),
+	configtools = require('../lib/vufind2/configtools'),
+	grunttools = require('../lib/vufind2/grunttools'),
+	composertools = require('../lib/vufind2/composertools');
 
 program
 	.usage('[options] <site ...>')
@@ -23,7 +23,6 @@ program
 	.option('--db-server [value]', 'the host that runs the db server', 'localhost')
 	.option('--db-client [value]', 'the host which the db server sees the db client as', 'localhost')
 	.option('--solr-url [value]', 'the url to the solr', 'http://172.18.113.250:8080/solr')
-	.option('--ai-url [value]', 'the url to the article-index', 'ai.ub.uni-leipzig.de/solr/biblio')
 	.option('-u, --url [value]', 'the url of this site', 'https://staging.finc.info/vufind2/')
 	.parse(process.argv);
 
@@ -44,10 +43,10 @@ Q.all(_.map(program.args, function (site) {
 		grunttools.foundation(site)
 	], function (defaults, configs, languages) {
 		return configtools.createConfigs(site, defaults, configs, languages);
-	}).then(function(result) {
+	}).then(function (result) {
 		return configtools.updateDefaults(site, result);
 	}).then(function (result) {
-       	return composertools.composer(site, result);
+		return composertools.composer(site, result);
 	}).catch(function (err) {
 		console.error('could not configure site ' + site);
 		console.error(err);
