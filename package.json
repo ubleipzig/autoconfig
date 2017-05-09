@@ -1,9 +1,11 @@
 {
   "name": "autoconfig",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "generates config for deployed instances",
   "scripts": {
     "test": "mocha",
+    "ncu": "ncu",
+    "lint": "eslint",
     "ci": "istanbul cover _mocha -- --reporter mocha-jenkins-reporter",
     "test-debug": "mocha --debug-brk"
   },
@@ -25,10 +27,12 @@
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "check-updates": "0.0.1",
+    "eslint": "^3.19.0",
     "istanbul": "^0.4.3",
-    "mocha": "^2.5.3",
-    "mocha-jenkins-reporter": "^0.2.2",
+    "mocha": "^3.3.0",
+    "mocha-jenkins-reporter": "^0.3.8",
     "npm-check-updates": "^2.6.5",
-    "should": "^9.0.0"
+    "should": "^11.2.1"
   }
 }
