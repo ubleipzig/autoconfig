@@ -1,4 +1,4 @@
-/*global describe before it*/
+/*global describe before after it*/
 
 'use strict';
 
@@ -8,6 +8,7 @@ var _ = require('underscore')
 	, fs = require('fs')
 	, path = require('path')
 	, mkdirp = require('mkdirp')
+	, rimraf = require('rimraf')
 	, Q = require('q')
 	, readdir = require('recursive-readdir')
 	;
@@ -30,49 +31,44 @@ describe('vufind', function () {
 
 
 	before(function (done) {
-		fs.stat(basedir, function (err) {
-			if (err) {
-				mkdirp.sync(configDir);
-				mkdirp.sync(languageDir);
-			}
-			var files = ['de', 'en', 'es'];
+		mkdirp.sync(configDir);
+		mkdirp.sync(languageDir);
+		var files = ['de', 'en', 'es'];
+
+		for (var j = 0; files[j]; j++) {
+			var file = path.join(languageDir, files[j] + '.ini');
+			fs.writeFileSync(file, 'sample text');
+			languageFilesToResolve.push(file);
+		}
+
+		file = null;
+
+		for (var i = 1; i < 4; i++) {
+			var folder = path.join(languageDir, 'subFolder' + i);
+			mkdirp.sync(folder);
 
 			for (var j = 0; files[j]; j++) {
-				var file = path.join(languageDir, files[j] + '.ini');
+				var file = path.join(folder, files[j] + '.ini');
 				fs.writeFileSync(file, 'sample text');
 				languageFilesToResolve.push(file);
 			}
+		}
 
-			file = null;
+		files = ['a', 'b', 'c'];
 
-			for (var i = 1; i < 4; i++) {
-				var folder = path.join(languageDir, 'subFolder' + i);
-				mkdirp.sync(folder);
+		for (var i = 0; files[i]; i++) {
+			var file = path.join(configDir, files[i] + '.ini');
+			fs.writeFileSync(file, 'sample text');
+			configFilesToResolve.push(file);
+		}
 
-				for (var j = 0; files[j]; j++) {
-					var file = path.join(folder, files[j] + '.ini');
-					fs.writeFileSync(file, 'sample text');
-					languageFilesToResolve.push(file);
-				}
-			}
-
-			files = ['a', 'b', 'c'];
-
-			for (var i = 0; files[i]; i++) {
-				var file = path.join(configDir, files[i] + '.ini');
-				fs.writeFileSync(file, 'sample text');
-				configFilesToResolve.push(file);
-			}
-
-			program.basedir = basedir;
-			done();
-		});
-
+		program.basedir = basedir;
+		done();
 	});
 
-	// after(function (done) {
-	// 	rimraf(basedir, done);
-	// });
+	after(function (done) {
+		rimraf(basedir, done);
+	});
 
 	describe('configtools', function () {
 		describe('findParentLanguages', function () {

@@ -33,6 +33,7 @@
     "mocha": "3.4.2",
     "mocha-jenkins-reporter": "0.3.8",
     "npm-check-updates": "2.11.3",
-    "should": "11.2.1"
+    "should": "11.2.1",
+    "rimraf": "2.6.1"
   }
 }
