@@ -4,14 +4,13 @@
 
 var program = require('commander'),
 	Q = require('q'),
-	_ = require('underscore'),
 	path = require('path'),
 	configtools = require('../lib/vufind/configtools'),
-	grunttools = require('../lib/vufind/grunttools'),
-	composertools = require('../lib/vufind/composertools');
+	grunttools = require('../lib/grunttools'),
+	composertools = require('../lib/composertools');
 
 program
-	.usage('[options] <site ...>')
+	.usage('[options] <site>')
 	.option('-b, --basedir [value]', 'where the configuration is saved', '/usr/local/vufind/')
 	.option('-i, --instance <value>', 'the instance to set up', /^(alpha|staging|live)$/i)
 	.option('-c, --configs [value]', 'the folder with default overrides. they must follow the naming convention isil.json', path.join(process.env.HOME, '.autoconfig/'))
@@ -37,7 +36,7 @@ if (!program.args || program.args.length > 1) {
 
 var site = program.args[0];
 
-return Q.spread([
+Q.spread([
 	configtools.fetchDefaults(site),
 	configtools.findParentConfigs(site),
 	configtools.findParentLanguages(site),
@@ -48,8 +47,8 @@ return Q.spread([
 	return configtools.updateDefaults(site, result);
 }).then(function (result) {
 	return composertools.composer(site, result);
-}).then(function (result) {
-	console.log('processed ' + result.length + ' sites');
+}).then(function () {
+	console.log('processed site ' + site);
 }).catch(function (err) {
 	console.error('could not configure site ' + site);
 	console.error(err);
