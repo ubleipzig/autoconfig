@@ -3,7 +3,7 @@
 'use strict';
 
 var _ = require('underscore')
-	, configtools = require('../lib/vufind2/configtools')
+	, configtools = require('../lib/vufind/configtools')
 	, program = require('commander')
 	, fs = require('fs')
 	, path = require('path')
@@ -14,12 +14,12 @@ var _ = require('underscore')
 
 require('should');
 
-describe('vufind2', function () {
+describe('vufind', function () {
 
 	var site = 'myAwesomeInstance';
 	var instance = 'staging';
 	var basedir = path.join(process.cwd(), '.tmp');
-	var siteDir = path.join(basedir, site, site);
+	var siteDir = path.join(basedir, site);
 	var configDir = path.join(siteDir, 'config', 'vufind');
 	var languageDir = path.join(siteDir, 'languages');
 	var instanceDir = path.join(siteDir, instance);

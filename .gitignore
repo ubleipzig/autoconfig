@@ -80,6 +80,5 @@ crashlytics-build.properties
 .tmp
 core.*
 .vscode
-coverage
 
 report.xml

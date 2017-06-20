@@ -4,7 +4,7 @@ this program is used to set up an arbitrary software project after its deploymen
 frankly it is part of the deployment process and should take over after successfully
 copying all project code to the appropriate location.
 
-the currently supported software is [vufind2][1]
+the currently supported software is [vufind][1]
 
 ## installation
 
@@ -26,26 +26,26 @@ for help see the commandline help i.e.
 
     autoconfig help
 
-## autoconfig vufind2
+## autoconfig vufind
 
-to set up a vufind2 instance it has to follow some rules (although i tried to make it
+to set up a vufind instance it has to follow some rules (although i tried to make it
 as flexible as possible)
 
-    autoconfig help vufind2
+    autoconfig help vufind
 
 will give an overview of all possible config params
 
 ### `--basedir`
 
-will set the folder where the vufind2-folder is located.
+will set the folder where the vufind-app is located.
 
-by default the folder `/usr/local/vufind2/` is used
+by default the folder `/usr/local/vufind/` is used
 
 ### `--instance`
 
 will set which instance is deployed. this is really just the name of the folder,
 where autoconfig saves all new config files in and which you have to set as
-VUFIND_LOCAL_DIR environment variable in apache2 so vufind2 will use it as config folder
+VUFIND_LOCAL_DIR environment variable in apache2 so vufind will use it as config folder
 
 ### `--configs`
 
@@ -97,32 +97,32 @@ the specified value will be set as site-url/<site name> in config.ini
 ## Example
 
 lets say we want to set up the site **foo**. the **staging** folder of this site is named
-alike and is located in `/var/lib/vufind2/`, the database-server and the ai-index url to use
+alike and is located in `/var/lib/vufind/`, the database-server and the ai-index url to use
 are the same for each site, the solr-url is different, so we specify that by adjusting
 the site's configuration later.
 
 the configurations do not exist, but we want to create them whilest processing.
 we would to so as following:
 
-    autoconfig vufind2 \
+    autoconfig vufind \
       -i staging \
-      -b /var/lib/vufind2 \
-      --url https://staging.vufind2.example.com/foo
+      -b /var/lib/vufind/foo \
+      --url https://staging.vufind.example.com/foo
       --db-server mysql.example.com \
-      --db-client staging.vufind2.example.com \
-      --ai-url ai.vufind2.example.com/biblio \
+      --db-client staging.vufind.example.com \
+      --ai-url ai.vufind.example.com/biblio \
       foo
 
-_autoconfig_ now looks for all configuration files within `/var/lib/vufind2/foo/foo/config/vufind/`
- and and language files within `/var/lib/vufind2/foo/foo/languages/`.
+_autoconfig_ now looks for all configuration files within `/var/lib/vufind/foo/foo/config/vufind/`
+ and and language files within `/var/lib/vufind/foo/foo/languages/`.
 
  Config files which ends to `.ini` are considered do be inheritable and therefore _autoconfig_
- creates new files in `/var/lib/vufind2/foo/foo/staging/config/vufind/` with the same name
- and a parent-config setting as vufind2 supports it, which inherits the related config-file.
+ creates new files in `/var/lib/vufind/foo/foo/staging/config/vufind/` with the same name
+ and a parent-config setting as vufind supports it, which inherits the related config-file.
 
  The next step is to create a database according to the specified credentials. since there
  are none specified (which is for now only possible by providing a configuration template,
- see `configs`) _autoconfig_ creates a dbuser `vufind2_foo`, a database `vufind2_foo` and
+ see `configs`) _autoconfig_ creates a dbuser `vufind_foo`, a database `vufind_foo` and
  a random password. To be able to do so the user that runs _autoconfig_ needs a `.my.cnf` in
  its home folder that specifys the sufficient credentials to log into the server, create
  databases and users.
@@ -140,7 +140,7 @@ _autoconfig_ now looks for all configuration files within `/var/lib/vufind2/foo/
       "SolrAI.ini": {},
       "config.ini": {
         "Database": {
-          "database": "mysql://vufind2_foo:U57jeRyw8mT7Vl9v@mysql.example.com/vufind2_foo"
+          "database": "mysql://vufind_foo:U57jeRyw8mT7Vl9v@mysql.example.com/vufind_foo"
         },
         "Index": {
           "url": "http://172.18.113.250:8080/solr"
@@ -149,13 +149,13 @@ _autoconfig_ now looks for all configuration files within `/var/lib/vufind2/foo/
           "ils_encryption_key": "gef36739fc553b9c41e802g4c440eb0bba1cd326"
         },
         "Site": {
-          "url": "https://staging.vufind2.example.com/foo"
+          "url": "https://staging.vufind.example.com/foo"
         }
       },
       "facets.ini": {},
       "searches.ini": {
         "IndexShards": {
-          "ai": "ai.vufind2.example.com/biblio"
+          "ai": "ai.vufind.example.com/biblio"
         },
         "ShardPreferences": {
           "showCheckboxes": true
@@ -168,9 +168,9 @@ these are default values which appear to be required or useful.
 
 to change the configuration of the site simply edit the template and do another
 
-   autoconfig vufind2 \
+   autoconfig vufind \
       -i staging \
-      -b /var/lib/vufind2 \
+      -b /var/lib/vufind/foo \
       foo
 
 since all configuration is now provided by the site template we do not need to provide

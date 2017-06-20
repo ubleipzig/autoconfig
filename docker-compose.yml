@@ -1,11 +1,13 @@
-node:
-  image: docker.io/smoebody/dev-nodejs:latest
-  volumes:
-    - ./:/app
-  ports:
-    - "127.0.0.1:5858:5858"
-  working_dir: /app
-  environment:
-    - "NODE_ENV=development"
-  command:
-    - "npm test"
+version: '2'
+services:
+  node:
+    image: docker.io/smoebody/dev-nodejs:latest
+    volumes:
+      - ./:/app
+    ports:
+      - "127.0.0.1:5858:5858"
+    working_dir: /app
+    environment:
+      - "NODE_ENV=development"
+    command:
+      - "npm test"
