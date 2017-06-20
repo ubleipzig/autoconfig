@@ -35,7 +35,7 @@ if (!program.args || program.args.length > 1) {
 	console.error('please specify exactly one site to set up');
 }
 
-const site = program.args[0];
+var site = program.args[0];
 
 return Q.spread([
 	configtools.fetchDefaults(site),
@@ -48,10 +48,9 @@ return Q.spread([
 	return configtools.updateDefaults(site, result);
 }).then(function (result) {
 	return composertools.composer(site, result);
+}).then(function (result) {
+	console.log('processed ' + result.length + ' sites');
 }).catch(function (err) {
 	console.error('could not configure site ' + site);
 	console.error(err);
-});
-})).then(function (result) {
-	console.log('processed ' + result.length + ' sites');
 });
