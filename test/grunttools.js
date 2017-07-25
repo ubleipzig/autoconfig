@@ -44,7 +44,7 @@ describe('grunttools', function () {
 				grunttools.grunt().then(function (stdout) {
 					done(new Error('no error was thrown: ' + stdout));
 				}).catch(function(err) {
-					if (err.cmd === '/bin/sh -c grunt') return done();
+					if (err.cmd === 'grunt') return done();
 					done(err);
 				});
 			});
@@ -59,7 +59,7 @@ describe('grunttools', function () {
 				grunttools.grunt().then(function (stdout) {
 					done(new Error('no error was thrown: ' + stdout));
 				}).catch(function(err) {
-					if (err.cmd === '/bin/sh -c grunt') return done();
+					if (err.cmd === 'grunt') return done();
 					done(err);
 				});
 			});
