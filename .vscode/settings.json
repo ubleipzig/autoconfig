@@ -1,0 +1,10 @@
+{
+	"eslint.enable": true,
+
+	"search.exclude": {
+    "**/coverage": true,
+		"**/node_modules": true,
+    "**/bower_components": true,
+		"**/.idea": true
+  }
+}

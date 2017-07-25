@@ -1,79 +1,85 @@
-/*global describe before after it*/
+/*global describe beforeEach afterEach it*/
 
 'use strict';
 
-var _ = require('underscore')
-	, configtools = require('../lib/vufind/configtools')
-	, program = require('commander')
-	, fs = require('fs')
-	, path = require('path')
-	, mkdirp = require('mkdirp')
-	, rimraf = require('rimraf')
-	, Q = require('q')
-	, readdir = require('recursive-readdir')
-	;
+var _ = require('underscore'),
+	fs = require('fs'),
+	path = require('path'),
+	mkdirp = require('mkdirp'),
+	Q = require('q'),
+	readdir = require('recursive-readdir'),
+	rimraf = require('rimraf');
 
 require('should');
 
 describe('vufind', function () {
 
-	var site = 'myAwesomeInstance';
-	var instance = 'staging';
-	var basedir = path.join(process.cwd(), '.tmp');
-	var siteDir = path.join(basedir, site);
+	var options = {
+		basedir: path.join(process.cwd(), '.tmp'),
+		instance: 'staging',
+		site: 'myAwesomeInstance',
+	};
+
+	var siteDir = path.join(options.basedir, options.site);
 	var configDir = path.join(siteDir, 'config', 'vufind');
 	var languageDir = path.join(siteDir, 'languages');
-	var instanceDir = path.join(siteDir, instance);
+	var instanceDir = path.join(siteDir, options.instance);
 	var instanceConfigDir = path.join(instanceDir, 'config', 'vufind');
 	var instanceLanguageDir = path.join(instanceDir, 'languages');
 	var languageFilesToResolve = [];
 	var configFilesToResolve = [];
 
-
-	before(function (done) {
-		mkdirp.sync(configDir);
-		mkdirp.sync(languageDir);
-		var files = ['de', 'en', 'es'];
-
-		for (var j = 0; files[j]; j++) {
-			var file = path.join(languageDir, files[j] + '.ini');
-			fs.writeFileSync(file, 'sample text');
-			languageFilesToResolve.push(file);
-		}
-
-		file = null;
-
-		for (var i = 1; i < 4; i++) {
-			var folder = path.join(languageDir, 'subFolder' + i);
-			mkdirp.sync(folder);
+	beforeEach(function (done) {
+		languageFilesToResolve = [];
+		configFilesToResolve = [];
+		fs.stat(options.basedir, function (err) {
+			if (err) {
+				mkdirp.sync(configDir);
+				mkdirp.sync(languageDir);
+			}
+			var files = ['de', 'en', 'es'];
 
 			for (var j = 0; files[j]; j++) {
-				var file = path.join(folder, files[j] + '.ini');
+				var file = path.join(languageDir, files[j] + '.ini');
 				fs.writeFileSync(file, 'sample text');
 				languageFilesToResolve.push(file);
 			}
-		}
 
-		files = ['a', 'b', 'c'];
+			file = null;
 
-		for (var i = 0; files[i]; i++) {
-			var file = path.join(configDir, files[i] + '.ini');
-			fs.writeFileSync(file, 'sample text');
-			configFilesToResolve.push(file);
-		}
+			for (var i = 1; i < 4; i++) {
+				var folder = path.join(languageDir, 'subFolder' + i);
+				mkdirp.sync(folder);
 
-		program.basedir = basedir;
-		done();
+				for (var j = 0; files[j]; j++) {
+					var file = path.join(folder, files[j] + '.ini');
+					fs.writeFileSync(file, 'sample text');
+					languageFilesToResolve.push(file);
+				}
+			}
+
+			files = ['a', 'b', 'c'];
+
+			for (var i = 0; files[i]; i++) {
+				var file = path.join(configDir, files[i] + '.ini');
+				fs.writeFileSync(file, 'sample text');
+				configFilesToResolve.push(file);
+			}
+
+			done();
+		});
+
 	});
 
-	after(function (done) {
-		rimraf(basedir, done);
+	afterEach(function (done) {
+		rimraf(options.basedir, done);
 	});
 
 	describe('configtools', function () {
+		var configtools = require('../lib/vufind/configtools')(options);
 		describe('findParentLanguages', function () {
 			it('should return 12 ini paths', function (done) {
-				configtools.findParentLanguages(site).then(function (data) {
+				configtools.findParentLanguages().then(function (data) {
 					return Q.all(_.map(data, function (file) {
 						var deferred = Q.defer();
 
@@ -96,7 +102,7 @@ describe('vufind', function () {
 
 		describe('findParentConfigs', function () {
 			it('should return 3 ini paths', function (done) {
-				configtools.findParentConfigs(site).then(function (data) {
+				configtools.findParentConfigs().then(function (data) {
 					return Q.all(_.map(data, function (file) {
 						var deferred = Q.defer();
 
@@ -117,16 +123,15 @@ describe('vufind', function () {
 			});
 		});
 
-		describe('createConfigs', function() {
+		describe('createConfigs', function () {
 			var createdConfigs,
 				createdLanguages;
-			before(function(done) {
-				program.instance = instance;
-				configtools.createConfigs(site, {}, configFilesToResolve, languageFilesToResolve).then(function() {
+			beforeEach(function (done) {
+				configtools.createConfigs({}, configFilesToResolve, languageFilesToResolve).then(function () {
 					Q.spread([
 						readInis(instanceLanguageDir),
 						readInis(instanceConfigDir)
-					], function(lang, conf) {
+					], function (lang, conf) {
 						createdLanguages = lang;
 						createdConfigs = conf;
 						done();
@@ -134,20 +139,22 @@ describe('vufind', function () {
 				});
 			});
 
-			it('should create 3 config inis without defaults', function(done) {
+			it('should create 3 config inis without defaults', function (done) {
 				Object.keys(createdConfigs).should.have.lengthOf(configFilesToResolve.length);
 				done();
 			});
 
-			it('should create 12 language inis', function(done) {
+			it('should create 12 language inis', function (done) {
 				Object.keys(createdLanguages).should.have.lengthOf(languageFilesToResolve.length);
 				done();
 			});
 
 
-			it('should reference parent language files from instanceLanguageBasePath', function(done) {
-				Q.all(createdLanguages.map(function(languageFile) {
-					return Q.all(fs.readFileSync(languageFile, {encoding: 'utf-8'}).split('\n').map(function(line) {
+			it('should reference parent language files from instanceLanguageBasePath', function (done) {
+				Q.all(createdLanguages.map(function (languageFile) {
+					return Q.all(fs.readFileSync(languageFile, {
+						encoding: 'utf-8'
+					}).split('\n').map(function (line) {
 						var deferred = Q.defer();
 						var match = line.match(/^@parent_ini\s*=\s*"([^"]+)"/, 'm');
 						if (match === null) {
@@ -161,7 +168,7 @@ describe('vufind', function () {
 						}
 						return deferred.promise;
 					}));
-				})).then(function() {
+				})).then(function () {
 					done();
 				});
 			});
@@ -172,7 +179,7 @@ describe('vufind', function () {
 function readInis(dir) {
 	var deferred = Q.defer();
 	try {
-		readdir(dir, function(err, list) {
+		readdir(dir, function (err, list) {
 			if (err) deferred.reject(err);
 			deferred.resolve(list);
 		});

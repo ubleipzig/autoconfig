@@ -79,6 +79,5 @@ crashlytics-build.properties
 
 .tmp
 core.*
-.vscode
 
 report.xml
