@@ -37,7 +37,8 @@ if (!program.args || program.args.length > 1) {
 }
 
 if (program.hashId) {
-	var hashId = crypto.createHash('md5').update(program.basedir).digest('hex');
+	var hash = crypto.createHash('sha').update(program.basedir).digest('hex');
+	var hashId = hash.substr(0,4) + hash.substr(10, 4) + hash.substr(26, 4) + hash.substr(36, 4);
 }
 
 var site = program.args[0];
