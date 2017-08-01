@@ -98,13 +98,13 @@ the db-server resolves to that ip - which the client uses to connect to the db-s
 
 the specified value will be set as the url to the solr-index
 
-### `--ai-url`
-
-the specified value will be set as the url to the article-index
-
 ### `--url`
 
 the specified value will be set as site-url/<site name> in config.ini
+
+### `--update-defaults`
+
+creates the defaults file or updates if it exists. see `--configs`.
 
 ## Example
 
@@ -122,7 +122,6 @@ we would to so as following:
       --url https://staging.vufind.example.com/foo
       --db-server mysql.example.com \
       --db-client staging.vufind.example.com \
-      --ai-url ai.vufind.example.com/biblio \
       foo
 
 *autoconfig* now looks for all configuration files within `/var/lib/vufind/foo/foo/config/vufind/`
@@ -196,6 +195,4 @@ from the configuration template first.**
 ## Todo
 
 * support for yaml format
-* overwriting configuration template when commandline parameters are provided
-* tests
 * make it more generic usable

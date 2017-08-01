@@ -11,7 +11,7 @@ program
 	.usage('[options] <site>')
 	.option('-b, --basedir [value]', 'where the configuration is saved', '/usr/local/vufind/')
 	.option('-i, --instance <value>', 'the instance to set up', /^(alpha|staging|live)$/i)
-	.option('-c, --configs [value]', 'the folder with default overrides.', path.join(process.env.HOME, '.autoconfig'))
+	.option('-c, --configs [value]', 'the folder with instance default settings.', path.join(process.env.HOME, '.autoconfig'))
 	.option('-f, --reuse-db', 'reuses an existing database by recreating credentials according to defaults', false)
 	.option('-d, --drop-db', 'drops an existing database', false)
 	.option('--hash-id', 'creates a unique deploy-id from basedir (used for db name/user and config-json', false)
@@ -22,8 +22,9 @@ program
 	.option('--undeploy', 'removes db and creates a backup or the current')
 	.option('--db-server [value]', 'the host that runs the db server', 'localhost')
 	.option('--db-client [value]', 'the host which the db server sees the db client as', 'localhost')
-	.option('--solr-url [value]', 'the url to the solr', 'http://172.18.113.250:8080/solr')
-	.option('-u, --url [value]', 'the url of this site', 'https://staging.finc.info/vufind/')
+	.option('--solr-url [value]', 'the url to the solr')
+	.option('-u, --url [value]', 'the url of this site')
+	.option('--update-defaults', 'updates the default instance settings', false)
 	.parse(process.argv);
 
 if (!program.instance) {
@@ -78,6 +79,7 @@ var composertools = require('../lib/composertools')({
 
 var skipConfig = program.skipConfig ? Q() : undefined;
 var skipDb = program.skipDb ? Q() : undefined;
+var skipUpdateDefaults = program.updateDefaults ? undefined : Q();
 
 if (program.undeploy) {
 	undeploy();
@@ -100,8 +102,8 @@ function deploy() {
 			return deferred.promise;
 		})()
 	], function (defaults, configs, languages) {
-		return skipConfig || configtools.createConfigs(defaults, configs, languages).then(function (defaults) {
-			return configtools.updateDefaults(defaults);
+		return skipConfig || configtools.createConfigs(defaults, configs, languages).then(function (configs) {
+			return skipUpdateDefaults || configtools.updateDefaults(configs);
 		});
 	}).then(function () {
 		return skipDb || dbtools.createDb();
