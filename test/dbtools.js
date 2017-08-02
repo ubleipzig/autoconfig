@@ -10,7 +10,7 @@ var cp = require('cp');
 var mysql = require('mysql');
 var _ = require('underscore');
 var fs = require('fs');
-var ini = require('ini');
+var ini = require('multi-ini');
 var url = require('url');
 require('should');
 
@@ -196,9 +196,9 @@ describe('dbtools', function () {
 						res.should.be.an.Array();
 						res.length.should.eql(0);
 
-						var modifiedIni = ini.decode(fs.readFileSync(options.instanceConfigIni, {
+						var modifiedIni = ini.read(options.instanceConfigIni, {
 							encoding: 'utf8'
-						}));
+						});
 						var dbCredentials = url.parse(modifiedIni.Database.database);
 						dbCredentials.path.should.eql('/d7a54761a93b9941f5bfb5d2d868b2b0');
 						var auth = dbCredentials.auth.split(':');
@@ -239,9 +239,9 @@ describe('dbtools', function () {
 					res.should.be.an.Array();
 					res.length.should.eql(0);
 
-					var modifiedIni = ini.decode(fs.readFileSync(options.instanceConfigIni, {
+					var modifiedIni = ini.read(options.instanceConfigIni, {
 						encoding: 'utf8'
-					}));
+					});
 					var dbCredentials = url.parse(modifiedIni.Database.database);
 					dbCredentials.path.should.eql('/testdb');
 					var auth = dbCredentials.auth.split(':');

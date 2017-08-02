@@ -3,9 +3,10 @@
 'use strict';
 
 var program = require('commander');
+var pjson = require('../package.json');
 
 program
-	.version('1.4.2')
+	.version(pjson.version)
 	.description('creates the config for a site and instance accordingly to defaults and custom overrides')
 	.command('vufind', 'sets up a vufind instance')
 	.parse(process.argv);

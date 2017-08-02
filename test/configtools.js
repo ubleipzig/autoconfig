@@ -10,8 +10,7 @@ var _ = require('underscore'),
 	readdir = require('recursive-readdir'),
 	rimraf = require('rimraf'),
 	dir = require('node-dir'),
-	cp = require('node-cp'),
-	ini = require('ini');
+	cp = require('node-cp');
 
 require('should');
 
@@ -177,15 +176,15 @@ describe('vufind', function () {
 						}).catch(done);
 				});
 				it('should extend the ini-files', function (done) {
-					fs.statSync(path.resolve(instanceConfigDir, 'config.ini')).size.should.eql(197);
+					fs.statSync(path.resolve(instanceConfigDir, 'config.ini')).size.should.eql(196);
 					Object.keys(newDefaults['config.ini']).should.containEql('Authentication' , 'Global', 'Site', 'Database');
 					newDefaults['config.ini'].Site.url.should.eql('http://example.com');
 					done();
 				});
 
 				it('should leave all other files', function (done) {
-					fs.statSync(path.resolve(instanceConfigDir, 'custom.ini')).size.should.eql(17);
-					fs.statSync(path.resolve(instanceConfigDir, 'a.ini')).size.should.eql(17);
+					fs.statSync(path.resolve(instanceConfigDir, 'custom.ini')).size.should.eql(25);
+					fs.statSync(path.resolve(instanceConfigDir, 'a.ini')).size.should.eql(25);
 					done();
 				});
 			});
