@@ -1,7 +1,7 @@
 version: '2'
 services:
   node:
-    image: docker.io/smoebody/dev-nodejs:4
+    image: docker.io/smoebody/dev-nodejs:8
     volumes:
       - ./:/app
       - ../../php/vufind2:/usr/local/vufind2
