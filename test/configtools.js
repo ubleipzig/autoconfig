@@ -66,7 +66,7 @@ describe('vufind', function () {
 		describe('findParentLanguages', function () {
 			it('should return 12 ini paths', function (done) {
 				configtools.findParentLanguages().then(function (data) {
-					return Q.all(_.map(data, function (file) {
+					return Q.all(data.map(function (file) {
 						var deferred = Q.defer();
 
 						fs.stat(file, function (err, stat) {
@@ -89,7 +89,7 @@ describe('vufind', function () {
 		describe('findParentConfigs', function () {
 			it('should return 3 ini paths', function (done) {
 				configtools.findParentConfigs().then(function (data) {
-					return Q.all(_.map(data, function (file) {
+					return Q.all(data.map(function (file) {
 						var deferred = Q.defer();
 
 						fs.stat(file, function (err, stat) {
@@ -130,7 +130,7 @@ describe('vufind', function () {
 				it('should create 3 config inis without defaults', function (done) {
 					Object.keys(createdConfigs).should.have.lengthOf(configFilesToResolve.length);
 					createdConfigs.map(function (config) {
-						fs.statSync(config).size.should.eql(59);
+						if (config.substr(-3) === 'ini') fs.statSync(config).size.should.eql(59);
 					});
 					done();
 				});
@@ -184,7 +184,9 @@ describe('vufind', function () {
 
 				it('should leave all other files', function (done) {
 					fs.statSync(path.resolve(instanceConfigDir, 'custom.ini')).size.should.eql(25);
-					fs.statSync(path.resolve(instanceConfigDir, 'a.ini')).size.should.eql(25);
+					fs.statSync(path.resolve(instanceConfigDir, 'a.ini')).size.should.eql(28);
+					fs.statSync(path.resolve(instanceConfigDir, 'foreignLeave.yml')).size.should.eql(25);
+					fs.statSync(path.resolve(instanceConfigDir, 'foreignCopy.yml')).size.should.eql(24);
 					done();
 				});
 			});
