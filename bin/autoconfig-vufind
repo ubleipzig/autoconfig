@@ -118,8 +118,8 @@ function deploy() {
 }
 
 function undeploy() {
-	dbtools.removeDb().then(function () {
-		console.log('site removed successfully');
+	dbtools.removeDb().then(function (backupFile) {
+		console.log(`site removed successfully. Database backup saved to ${backupFile}`);
 	}).catch(function () {
 		console.log('no database was removed');
 	});
