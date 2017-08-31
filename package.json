@@ -1,6 +1,6 @@
 {
   "name": "autoconfig",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "generates config for deployed instances",
   "scripts": {
     "test": "mocha",
@@ -14,7 +14,7 @@
     "autoconfig": "./bin/autoconfig",
     "autoconfig-vufind": "./bin/autoconfig-vufind"
   },
-  "author": "seltmann@ub.uni-leipzig.de",
+  "author": "Ulf Seltmann <ulf.seltmann@uni-leipzig.de>",
   "license": "ISC",
   "dependencies": {
     "commander": "2.11.0",

@@ -37,12 +37,17 @@ if (!program.args || program.args.length > 1) {
 	process.exit(2);
 }
 
-if (program.hashId) {
-	var hash = crypto.createHash('sha').update(program.basedir).digest('hex');
-	var hashId = hash.substr(0,4) + hash.substr(10, 4) + hash.substr(26, 4) + hash.substr(36, 4);
-}
-
 var site = program.args[0];
+
+var hash = crypto.createHash('sha').update(program.basedir).digest('hex');
+
+if (program.hashId) {
+	var hashId = hash.substr(0,4) + hash.substr(10, 4) + hash.substr(26, 4) + hash.substr(36, 4);
+} else if (('vufind_' + site).length > 16) {
+	var dbName = hash.substr(0,4) + hash.substr(10, 4) + hash.substr(26, 4) + hash.substr(36, 4);
+} else {
+	var dbName = 'vufind_' + site;
+}
 
 var configtools = require('../lib/vufind/configtools')({
 	basedir: program.basedir,
@@ -51,7 +56,7 @@ var configtools = require('../lib/vufind/configtools')({
 	configs: program.configs,
 	deployId: hashId || site,
 	dbServer: program.dbServer,
-	dbName: hashId || 'vufind_' + site,
+	dbName: hashId || dbName,
 	solrUrl: program.solrUrl,
 	url: program.url
 });
@@ -62,7 +67,7 @@ var dbtools = require('../lib/vufind/dbtools')({
 	restoreDb: program.restoreDb,
 	dbClient: program.dbClient,
 	dbServer: program.dbServer,
-	dbName: hashId || 'vufind_' + site,
+	dbName: hashId || dbName,
 	reuseDb: program.reuseDb,
 	dropDb: program.dropDb,
 	vanillaSqlFile: path.join(program.basedir, 'module/VuFind/sql/mysql.sql'),

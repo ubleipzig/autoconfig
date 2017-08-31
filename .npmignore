@@ -1,0 +1,11 @@
+/.vscode
+/coverage
+/docs
+/test
+/.eslintrc.json
+/.git*
+/docker-compose.yml
+/jsconfig.json
+/mkdocs.yml
+/package-lock.json
+/report.xml
