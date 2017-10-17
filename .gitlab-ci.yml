@@ -1,0 +1,47 @@
+stages:
+  - build
+  - test
+  - publish
+
+npm_install:
+  stage: build
+  image: node:8
+  script:
+  - npm install
+  cache:
+    key: "${CI_COMMIT_SHA}"
+    paths:
+    - node_modules
+  tags:
+  - docker
+
+npm_ci:
+  stage: test
+  image: node:8
+  services:
+  - name: mysql:latest
+    alias: db
+  script:
+  - npm run ci
+  variables:
+    NODE_ENV: "test"
+    MYSQL_HOST: "db"
+    MYSQL_PORT: "3306"
+    MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+  cache:
+    key: "${CI_COMMIT_SHA}"
+    paths:
+    - node_modules
+  tags:
+  - docker
+
+
+npm_publish:
+  stage: publish
+  image: node:8
+  only:
+  - master
+  script:
+  - npm --registry https://docker.ub.intern.uni-leipzig.de/npm ci-publish
+  tags:
+  - docker
