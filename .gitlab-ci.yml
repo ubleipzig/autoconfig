@@ -46,3 +46,5 @@ npm_publish:
   - npm publish
   tags:
   - docker
+  variables:
+    npm_config_registry: https://docker.ub.intern.uni-leipzig.de/npm
