@@ -42,6 +42,7 @@ npm_publish:
   only:
   - master
   script:
-  - npm --registry https://docker.ub.intern.uni-leipzig.de/npm run ci-publish
+  - echo "//docker.ub.intern.uni-leipzig.de/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+  - npm publish
   tags:
   - docker
