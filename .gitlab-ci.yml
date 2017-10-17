@@ -42,6 +42,6 @@ npm_publish:
   only:
   - master
   script:
-  - npm --registry https://docker.ub.intern.uni-leipzig.de/npm ci-publish
+  - npm --registry https://docker.ub.intern.uni-leipzig.de/npm run ci-publish
   tags:
   - docker
