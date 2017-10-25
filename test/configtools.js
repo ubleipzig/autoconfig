@@ -10,7 +10,8 @@ var _ = require('underscore'),
 	readdir = require('recursive-readdir'),
 	rimraf = require('rimraf'),
 	dir = require('node-dir'),
-	cp = require('node-cp');
+	cp = require('node-cp'),
+	ini = require('multi-ini');
 
 require('should');
 
@@ -165,20 +166,23 @@ describe('vufind', function () {
 			});
 
 			describe('with existing configuration files', function () {
-				var newDefaults;
 				beforeEach(function (done) {
 					Q.nfcall(cp, stagingFiles, path.resolve(options.basedir, options.site, 'staging'))
 						.then(function () {
 							return configtools.createConfigs(defaults, configFilesToResolve, languageFilesToResolve);
-						}).then(function (res) {
-							newDefaults = res;
+						}).then(function () {
 							done();
 						}).catch(done);
 				});
 				it('should extend the ini-files', function (done) {
-					fs.statSync(path.resolve(instanceConfigDir, 'config.ini')).size.should.eql(196);
-					Object.keys(newDefaults['config.ini']).should.containEql('Authentication' , 'Global', 'Site', 'Database');
-					newDefaults['config.ini'].Site.url.should.eql('http://example.com');
+					let configIni = ini.read(path.resolve(instanceConfigDir, 'config.ini'), {
+						encoding: 'utf8',
+						keep_quotes: true
+					});
+					configIni.should.have.properties('Global', 'Site','Database','Authentication');
+					configIni.Site.should.have.properties('url', 'customVar');
+					configIni.Site.url.should.eql('http://example.com');
+					configIni.Site.customVar.should.eql('"customValue"');
 					done();
 				});
 

@@ -1,6 +1,6 @@
 {
   "name": "autoconfig",
-  "version": "1.5.7",
+  "version": "1.5.8",
   "description": "generates config for deployed instances",
   "scripts": {
     "test": "mocha",
@@ -29,6 +29,8 @@
     "underscore": "1.8.3"
   },
   "devDependencies": {
+    "debug": "^3.1.0",
+    "grunt": "^1.0.1",
     "cp": "0.2.0",
     "eslint": "4.1.1",
     "istanbul": "0.4.5",
