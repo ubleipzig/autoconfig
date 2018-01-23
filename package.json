@@ -2,6 +2,9 @@
   "name": "autoconfig",
   "version": "1.5.8",
   "description": "generates config for deployed instances",
+  "publishConfig": {
+    "registry": "https://services.ub.uni-leipzig.de/nexus/repository/npm-ubl/"
+  },
   "scripts": {
     "test": "mocha",
     "test-inspect": "mocha --inspect-brk=0.0.0.0:9229",
