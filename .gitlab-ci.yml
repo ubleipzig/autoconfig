@@ -11,11 +11,11 @@ npm_run_ci:
   services:
   - name: mysql:latest
     alias: db
-script:
-    - test -d .npm && mv .npm ${HOME}
-    - npm install
-    - npm run ci
-    - mv ${HOME}/.npm .
+  script:
+  - test -d .npm && mv .npm ${HOME}
+  - npm install
+  - npm run ci
+  - mv ${HOME}/.npm .
   variables:
     NODE_ENV: "test"
     MYSQL_HOST: "db"
