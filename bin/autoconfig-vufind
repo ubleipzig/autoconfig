@@ -93,10 +93,14 @@ if (program.undeploy) {
 }
 
 function deploy() {
-	Q.spread([
-		skipConfig || configtools.fetchDefaults(),
-		skipConfig || configtools.findParentConfigs(),
-		skipConfig || configtools.findParentLanguages(),
+	Q.all([
+		skipConfig || configtools.parse(program).then(() => {
+			return configtools.createConfigs().then(function (configs) {
+				return skipUpdateDefaults || configtools.updateDefaults(configs);
+			});
+		}).then(function () {
+			return skipDb || dbtools.createDb();
+		}),
 		(function () {
 			var deferred = Q.defer();
 			grunttools.grunt().then(deferred.resolve).catch(function (err) {
@@ -105,16 +109,9 @@ function deploy() {
 				deferred.resolve();
 			});
 			return deferred.promise;
-		})()
-	], function (defaults, configs, languages) {
-		return skipConfig || configtools.createConfigs(defaults, configs, languages).then(function (configs) {
-			return skipUpdateDefaults || configtools.updateDefaults(configs);
-		});
-	}).then(function () {
-		return skipDb || dbtools.createDb();
-	}).then(function () {
-		return composertools.composer();
-	}).then(function () {
+		})(),
+		composertools.composer()
+	], function () {
 		console.log('processed site ' + site);
 	}).catch(function (err) {
 		console.error('could not configure site ' + site);
