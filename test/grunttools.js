@@ -1,5 +1,27 @@
 /*global describe beforeEach afterEach it*/
 
+/**
+	autoconfig
+
+	Copyright (C) 2018 Leipzig University Library <info@ub.uni-leipzig.de>
+
+	Author: Ulf Seltmann <ulf.seltmann@uni-leipzig.de>
+	License: GNU GPLv3 <https://spdx.org/licenses/GPL-3.0-or-later.html>
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 'use strict';
 
 var path = require('path');
@@ -43,7 +65,7 @@ describe('grunttools', function () {
 			it('should skip installation', function (done) {
 				grunttools.grunt().then(function (stdout) {
 					done(new Error('no error was thrown: ' + stdout));
-				}).catch(function(err) {
+				}).catch(function (err) {
 					if (err.cmd === 'grunt') return done();
 					done(err);
 				});
@@ -58,7 +80,7 @@ describe('grunttools', function () {
 			it('should skip installation', function (done) {
 				grunttools.grunt().then(function (stdout) {
 					done(new Error('no error was thrown: ' + stdout));
-				}).catch(function(err) {
+				}).catch(function (err) {
 					if (err.cmd === 'grunt') return done();
 					done(err);
 				});
@@ -67,7 +89,7 @@ describe('grunttools', function () {
 
 		describe('with all set up', function () {
 			this.timeout(60000);
-			beforeEach(function(done) {
+			beforeEach(function (done) {
 				try {
 					cp.sync(gruntPackageFile, path.join(options.basedir, 'package.json'));
 					cp.sync(gruntFile, path.join(options.basedir, 'Gruntfile.js'));

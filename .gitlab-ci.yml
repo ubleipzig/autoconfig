@@ -1,6 +1,7 @@
 stages:
   - test
   - publish
+  - image
 
 variables:
   npm_config_registry: https://services.ub.uni-leipzig.de/nexus/repository/npm/
@@ -43,3 +44,20 @@ npm_publish:
     key: "${CI_PROJECT_ID}"
     paths:
     - .npm
+
+docker_image:
+    stage: image
+    only:
+    - master
+    image: docker:latest
+    services:
+    - docker:dind
+    script:
+    - docker build --no-cache --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/${CI_PROJECT_NAME}:latest .
+    - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/${CI_PROJECT_NAME}:latest services.ub.uni-leipzig.de:11443/bdd_dev/${CI_PROJECT_NAME}:${CI_PIPELINE_ID}
+    - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:10443/
+    - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:11443/
+    - docker push services.ub.uni-leipzig.de:11443/bdd_dev/${CI_PROJECT_NAME}:${CI_PIPELINE_ID}
+    - docker push services.ub.uni-leipzig.de:11443/bdd_dev/${CI_PROJECT_NAME}:latest
+    tags:
+    - docker
