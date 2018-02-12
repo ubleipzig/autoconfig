@@ -4,19 +4,12 @@
 		{
 			"type": "node",
 			"request": "attach",
-			"name": "debug",
+			"name": "inspect",
+			"port": 9229,
 			"address": "localhost",
-			"port": 5858,
 			"localRoot": "${workspaceRoot}",
-			"remoteRoot": "/app/"
-		},
-		{
-		"type": "node",
-		"request": "attach",
-		"name": "inspect",
-		"port": 9229,
-		"address": "localhost",
-		"localRoot": "${workspaceRoot}",
-		"remoteRoot": "/app/"
-	}]
+			"remoteRoot": "/app/",
+			"stopOnEntry": true
+		}
+	]
 }

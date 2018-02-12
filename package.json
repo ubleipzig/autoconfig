@@ -1,25 +1,24 @@
 {
   "name": "autoconfig",
-  "version": "1.5.8",
+  "version": "2.0.0",
   "description": "generates config for deployed instances",
   "publishConfig": {
     "registry": "https://services.ub.uni-leipzig.de/nexus/repository/npm-ubl/"
   },
   "scripts": {
-    "test": "mocha",
-    "test-inspect": "mocha --inspect-brk=0.0.0.0:9229",
-    "test-debug": "mocha --debug-brk",
+    "test": "VF_env_ini__My_SpecialSection__special_key=\"generic string\" mocha",
+    "test-inspect": "VF_env_ini__My_SpecialSection__special_key=\"generic string\" mocha --inspect-brk=0.0.0.0:9229",
+    "test-debug": "VF_env_ini__My_SpecialSection__special_key=\"generic string\" mocha --debug-brk",
     "ncu": "ncu",
     "lint": "eslint",
     "ci": "istanbul cover _mocha -- --timeout 10000",
     "ci-publish": "ci-publish"
   },
   "bin": {
-    "autoconfig": "./bin/autoconfig",
-    "autoconfig-vufind": "./bin/autoconfig-vufind"
+    "autoconfig": "lib/cli.js"
   },
   "author": "Ulf Seltmann <ulf.seltmann@uni-leipzig.de>",
-  "license": "ISC",
+  "license": "GPL-3.0-or-later",
   "dependencies": {
     "commander": "2.11.0",
     "mkdirp": "0.5.1",
@@ -30,12 +29,12 @@
     "password-generator": "2.1.0",
     "q": "1.5.0",
     "recursive-readdir": "2.2.1",
-    "underscore": "1.8.3"
+    "underscore": "1.8.3",
+    "yargs": "^11.0.0"
   },
   "devDependencies": {
-    "debug": "^3.1.0",
-    "grunt": "^1.0.1",
     "cp": "0.2.0",
+    "debug": "^3.1.0",
     "eslint": "4.1.1",
     "istanbul": "0.4.5",
     "mocha": "3.4.2",
