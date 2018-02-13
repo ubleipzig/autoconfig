@@ -2,9 +2,11 @@
 /coverage
 /docs
 /test
+/.dockerignore
 /.eslintrc.json
 /.git*
 /docker-compose.yml
+/Dockerfile
 /jsconfig.json
 /mkdocs.yml
 /package-lock.json
