@@ -53,9 +53,9 @@ docker_image:
     services:
     - docker:dind
     script:
+    - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:10443/
     - docker build --no-cache --pull -t services.ub.uni-leipzig.de:11443/bdd_dev/${CI_PROJECT_NAME}:latest .
     - docker tag services.ub.uni-leipzig.de:11443/bdd_dev/${CI_PROJECT_NAME}:latest services.ub.uni-leipzig.de:11443/bdd_dev/${CI_PROJECT_NAME}:${CI_PIPELINE_ID}
-    - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:10443/
     - docker login --username ${DOCKER_USER} --password ${DOCKER_PASSWORD} https://services.ub.uni-leipzig.de:11443/
     - docker push services.ub.uni-leipzig.de:11443/bdd_dev/${CI_PROJECT_NAME}:${CI_PIPELINE_ID}
     - docker push services.ub.uni-leipzig.de:11443/bdd_dev/${CI_PROJECT_NAME}:latest
