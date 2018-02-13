@@ -37,7 +37,6 @@ npm_publish:
   - master
   script:
   - 'echo "//services.ub.uni-leipzig.de/nexus/repository/npm-ubl/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
-  - npm unpublish --force autoconfig || true
   - npm publish
   tags:
   - docker
