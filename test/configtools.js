@@ -34,9 +34,8 @@ var _ = require('underscore'),
 	dir = require('node-dir'),
 	cp = require('node-cp'),
 	ini = require('multi-ini'),
-	configtools = require('../lib/vufind/configtools');
-
-require('should');
+	configtools = require('../lib/vufind/configtools'),
+	should = require('should');
 
 describe('vufind', function () {
 
@@ -109,9 +108,10 @@ describe('vufind', function () {
 				}));
 				done();
 			});
-			it('should throw an error', function (done) {
-				ct.findParentConfigs().then(function () {
-					done(new Error('Promise was not rejected'));
+			it('should return an empty array', function (done) {
+				ct.findParentConfigs().then(function (data) {
+					should(data).eql([]);
+					done();
 				}).catch(() => {
 					done();
 				});
