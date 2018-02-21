@@ -46,7 +46,7 @@ var options = {
 	reuseDb: false,
 	dropDb: false,
 	instance: 'staging',
-	vanillaSqlFile: path.join(process.cwd(), 'test', 'data', 'mysqltools', 'import.sql'),
+	importSqlFile: path.join(process.cwd(), 'test', 'data', 'mysqltools', 'import.sql'),
 	instanceConfigIni: path.join(tmpDir, 'config', 'config.ini')
 };
 
