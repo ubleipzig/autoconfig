@@ -21,7 +21,7 @@ npm_run_ci:
     NODE_ENV: "test"
     MYSQL_HOST: "db"
     MYSQL_PORT: "3306"
-    MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+    MYSQL_ROOT_PASSWORD: adminpw
   cache:
     key: ${CI_PROJECT_ID}
     paths:
