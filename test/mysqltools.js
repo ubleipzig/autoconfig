@@ -44,10 +44,10 @@ describe('mysqltools', function () {
 	var dumpFile = path.join(basedir, 'dump.sql');
 
 	var mysqltoolsOptions = {
-		host: process.env.MYSQL_HOST || 'db',
-		port: process.env.MYSQL_PORT || '3306',
-		user: process.env.MYSQL_USER || 'root',
-		password: process.env.MYSQL_PASSWORD || null
+		host: 'db',
+		port: '3306',
+		user: 'root',
+		password: 'adminpw'
 	};
 
 	var rootConnection;
@@ -59,7 +59,7 @@ describe('mysqltools', function () {
 	});
 
 	beforeEach(function (done) {
-		rootConnection = mysql.createConnection('mysql://root@db/');
+		rootConnection = mysql.createConnection('mysql://root:adminpw@db/');
 		rootConnection.connect(function (err) {
 			done(err);
 		});

@@ -113,9 +113,12 @@ creates the database from is present.
 * `--db-client`: The specified value will be set as host which the db server sees the db client as.
 Tthis is not necessarily your vufind-client`s hostname but the ip - or hostname which the db-server
 resolves to that ip - which the client uses to connect to the db-server.
+* `--db-admin-user`: The administrative user that performes all database actions. Defaults to `root`.
+* `--db-admin-password`: The password of the administrative user. Defaults to none.
+* `--import-sql-file`: The relative path to `--base-dir` to the sql-file to import in case the
+database is created. Defaults to `module/VuFind/sql/mysql.sql`.
 * `--update-settings`: Creates the defaults file or updates if it exists. See `--configs`.
 Defaults to `false`
-
 **Be aware that the option `--db-server` is only effective if there is no `config.ini` with an
 existing database configuration. Otherwise the already configured database-credentials are used.
 You could override them by specifying `--vf.config_ini.Database.database`, but this removes the
@@ -124,6 +127,8 @@ ability to create a database by hash (see `--hash-id`).**
 **Be aware that you *always* have to specify `--db-client` if your database-server is not the same
 host as the php-server. This option is used for creating and removing the database-user and
 therefore not stored in any vufind configuration.**
+
+**Be aware that settings from parameters or environment variables take precedence over settings-files or `.my.cnf`.**
 
 ## Undeploy
 

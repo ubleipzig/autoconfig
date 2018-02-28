@@ -20,6 +20,4 @@ services:
   db:
     image: mysql:latest
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
-    ports:
-      - "127.0.0.1:3306:3306"
+      MYSQL_ROOT_PASSWORD: adminpw

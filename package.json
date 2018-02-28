@@ -1,6 +1,6 @@
 {
   "name": "autoconfig",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "generates config for deployed instances",
   "publishConfig": {
     "registry": "https://services.ub.uni-leipzig.de/nexus/repository/npm-ubl/"
@@ -8,7 +8,6 @@
   "scripts": {
     "test": "VF_env_ini__My_SpecialSection__special_key=\"generic string\" mocha",
     "test-inspect": "VF_env_ini__My_SpecialSection__special_key=\"generic string\" mocha --inspect-brk=0.0.0.0:9229",
-    "test-debug": "VF_env_ini__My_SpecialSection__special_key=\"generic string\" mocha --debug-brk",
     "ci": "VF_env_ini__My_SpecialSection__special_key=\"generic string\" istanbul cover _mocha -- --timeout 10000",
     "ncu": "ncu",
     "lint": "eslint",

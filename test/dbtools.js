@@ -46,6 +46,8 @@ var options = {
 	reuseDb: false,
 	dropDb: false,
 	instance: 'staging',
+	adminUser: 'root',
+	adminPassword: 'adminpw',
 	importSqlFile: path.join(process.cwd(), 'test', 'data', 'mysqltools', 'import.sql'),
 	instanceConfigIni: path.join(tmpDir, 'config', 'config.ini')
 };
@@ -74,7 +76,7 @@ describe('dbtools', function () {
 	});
 
 	beforeEach(function (done) {
-		rootConnection = mysql.createConnection('mysql://root@db/');
+		rootConnection = mysql.createConnection('mysql://root:adminpw@db/');
 		rootConnection.connect(function (err) {
 			done(err);
 		});
