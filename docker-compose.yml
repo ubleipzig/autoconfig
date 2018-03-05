@@ -4,15 +4,19 @@ services:
     image: docker.io/smoebody/dev-nodejs:8
     volumes:
       - ./:/app
-      - ../../php/vufind2:/usr/local/vufind2
+      - ../../php/vufind2:/usr/local/vufind
     ports:
       - "127.0.0.1:9229:9229"
       - "127.0.0.1:5858:5858"
     working_dir: /app
     environment:
-      - "NODE_ENV=development"
-      - "MYSQL_HOST=db"
-      - "MYSQL_PORT=3306"
+      VUFIND_SITE: local
+      VUFIND_INSTANCE: dev
+      VUFIND_SKIP_GRUNT: "true"
+      VUFIND_SKIP_COMPOSER: "true"
+      VUFIND_DB_ADMIN_PASSWORD: adminpw
+      VF_config_ini__Database__database: mysql://vufind:vufindpw@db/vufind
+      VF_config_ini__Index__url: http://solr:8983
     command:
       - "npm test"
     depends_on:
