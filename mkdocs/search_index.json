@@ -2,7 +2,7 @@
     "docs": [
         {
             "location": "/",
-            "text": "autoconfig\n\n\nthis program is used to set up an arbitrary software project after its deployment.\nfrankly it is part of the deployment process and should take over after successfully\ncopying all project code to the appropriate location.\n\n\nthe currently supported software is \nvufind\n\n\ninstallation\n\n\nthis package is not part of the public npm-registry. its published to the private registry\nof the university library of leipzig. use this registry as follows:\n\n\nnpm --registry https://services.uni-leipzig.de/nexus/npm install -g autoconfig\n\n\n\nit is recommended to install it as superuser, but it is advised to be run as non-root\nthough.\n\n\nrun\n\n\nthe program is invoked by\n\n\nautoconfig\n\n\n\nfor help see the commandline help i.e.\n\n\nautoconfig help",
+            "text": "autoconfig\n\n\nthis program is used to set up an arbitrary software project after its deployment.\nfrankly it is part of the deployment process and should take over after successfully\ncopying all project code to the appropriate location.\n\n\nthe currently supported software is \nvufind\n\n\ninstallation\n\n\nthis package is not part of the public npm-registry. its published to the private registry\nof the university library of leipzig. use this registry as follows:\n\n\nnpm --registry https://services.ub.uni-leipzig.de/nexus/repository/npm/ install -g autoconfig\n\n\n\nit is recommended to install it as superuser, but it is advised to be run as non-root\nthough.\n\n\nrun\n\n\nthe program is invoked by\n\n\nautoconfig\n\n\n\nfor help see the commandline help i.e.\n\n\nautoconfig help",
             "title": "Home"
         },
         {
@@ -12,7 +12,7 @@
         },
         {
             "location": "/#installation",
-            "text": "this package is not part of the public npm-registry. its published to the private registry\nof the university library of leipzig. use this registry as follows:  npm --registry https://services.uni-leipzig.de/nexus/npm install -g autoconfig  it is recommended to install it as superuser, but it is advised to be run as non-root\nthough.",
+            "text": "this package is not part of the public npm-registry. its published to the private registry\nof the university library of leipzig. use this registry as follows:  npm --registry https://services.ub.uni-leipzig.de/nexus/repository/npm/ install -g autoconfig  it is recommended to install it as superuser, but it is advised to be run as non-root\nthough.",
             "title": "installation"
         },
         {
