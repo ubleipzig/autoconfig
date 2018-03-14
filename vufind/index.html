@@ -78,7 +78,8 @@
                 <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
         <li class="main active"><a href="#autoconfig-vufind">autoconfig vufind</a></li>
-            <li><a href="#usage">Usage</a></li>
+            <li><a href="#deploy">deploy</a></li>
+            <li><a href="#undeploy">Undeploy</a></li>
             <li><a href="#example">Example</a></li>
             <li><a href="#todo">Todo</a></li>
     </ul>
@@ -86,80 +87,150 @@
                 <div class="col-md-9" role="main">
 
 <h1 id="autoconfig-vufind">autoconfig vufind</h1>
-<p>to set up a vufind instance it has to follow some rules (although i tried to make it
-as flexible as possible)</p>
-<h2 id="usage">Usage</h2>
-<pre><code>autoconfig help vufind
+<p>Set up a vufind instance without having config files created or edited manually. <em>autoconfig</em> assumes that you have an initial configuration structure in the folder specified by <code>--basedir</code>, e.g.:</p>
+<pre><code>mySite/
+├── config
+│   └── vufind
+│       ├── config.ini
+        .
+└── languages
+    ├── de.ini
+    ├── Ebsco
+    │   ├── de.ini
+    │   └── en.ini
+    ├── en.ini
+    .
+
 </code></pre>
-<p>will give an overview of all possible config params</p>
-<h3 id="-basedir"><code>--basedir</code></h3>
-<p>will set the folder where the vufind-app is located.</p>
-<p>by default the folder <code>/usr/local/vufind/</code> is used</p>
-<h3 id="-instance"><code>--instance</code></h3>
-<p>will set which instance is deployed. this is really just the name of the folder,
+
+<p><em>autoconfig</em> will then extend the folder <code>mySite</code> by a new folder specified by <code>--instance</code> that creates a new config-structure which inherits from the site's configs, e.g.:</p>
+<pre><code>mySite/
+├── live
+│   ├── config
+│   │   └── vufind
+│   │       ├── config.ini
+│   |       .
+│   └── languages
+│       ├── de.ini
+│       ├── Ebsco
+│       │   ├── de.ini
+│       │   └── en.ini
+│       ├── en.ini
+│       .
+├── config
+│   └── vufind
+│       ├── config.ini
+        .
+└── languages
+    ├── de.ini
+    ├── Ebsco
+    │   ├── de.ini
+    │   └── en.ini
+    ├── en.ini
+    .
+
+</code></pre>
+
+<p>You can customize the contents of the config-files by adding commandline-arguments like this:</p>
+<pre><code>--vf.config_ini.Site.title=&quot;My Awesome VuFind&quot;
+</code></pre>
+
+<p>Alternatively one can add environment variables to add or modify configuration values like this:</p>
+<pre><code>export VF_config_ini__Site__title=&quot;My Awesome VuFind&quot;
+</code></pre>
+
+<p><em>Both examples will add or overwrite the key <code>title</code> in section <code>Site</code> in config-file <code>config.ini</code></em></p>
+<h2 id="deploy">deploy</h2>
+<p>To set up a vufind instance it has to follow some rules (although i tried to make it
+as flexible as possible)</p>
+<h3 id="usage">Usage</h3>
+<pre><code>autoconfig vufind deploy -s mySite -i live
+</code></pre>
+<p>will set up VuFind, assuming your installation lies under <code>/usr/local/vufind</code> and you have an configuration-folder <code>mySite</code>in there.</p>
+<h3 id="options">Options</h3>
+<ul>
+<li><code>--site</code>: The name of the site to set up. Required.</li>
+<li><code>--instance</code>: The instance to deploy. Required, choose from <em>alpha</em>, <em>staging', </em>live*.</li>
+<li><code>--basedir</code>: Will set the folder where the vufind-app is located. By default the
+folder <code>/usr/local/vufind/</code> is used.</li>
+<li><code>--instance</code>: Will set which instance is deployed. This is really just the name of the folder,
 where autoconfig saves all new config files in and which you have to set as
-VUFIND_LOCAL_DIR environment variable in apache2 so vufind will use it as config folder</p>
-<h3 id="-configs"><code>--configs</code></h3>
-<p>specifies the folder where the configuration template is located which shall be set up.
-the filename has to be the name of the site prefixed by the extension <code>.json</code></p>
-<p>by default the folder <code>${HOME}/.autoconfig</code> is used</p>
-<h3 id="-reuse-db"><code>--reuse-db</code></h3>
-<p>if present, an existing database, but not accessable by the configured dbuser will be reused
-by creating a new dbuser as configured and grant him all required rights to access the existing
-database. any existing users having access to that database will be untouched.</p>
-<p>Reusing an existing database imperatively depends on the right credentials for the database user. If the database user created by <em>autoconfig</em> is unable to connect to the database <em>autoconfig</em> will abort the process. Hint: <code>--db-client</code></p>
-<p>defaults to <code>false</code></p>
-<h3 id="-drop-db"><code>--drop-db</code></h3>
-<p>if present, an existing database will be dropped, a user deleted and a brand new
-database created. an appropriate user will be created as well.</p>
-<p>Reusing an existing database imperatively depends on the right credentials for the database user. If the database user created by <em>autoconfig</em> is unable to connect to the database <em>autoconfig</em> will abort the process. Hint: <code>--db-client</code></p>
-<p>defaults to <code>false</code></p>
-<h3 id="-hash-id"><code>--hash-id</code></h3>
-<p>if present, an unique md5-hash will be generated from basedir. this hash is used to identify the site by creating an autoconfig-json with this id and the site's database name and user.
-the <code>config.ini</code> for this instance will be modified accordingly.</p>
-<p>defaults to <code>false</code></p>
-<h3 id="-restore-db"><code>--restore-db</code></h3>
-<p>if present, <em>autoconfig</em> will look for a backup sql-file in the folder specified by <code>--db-backup-dir</code> after creating the database for the site. if a file for the site is found it is used to create a table structure, otherwise the vanilla sql-file is used.</p>
-<p>defaults to <code>true</code>.</p>
-<h3 id="-skip-config"><code>--skip-config</code></h3>
-<p>if present, creating a configuration structure based on inheritance premisses is omitted. only grunt is invoked and a database is created</p>
-<p>defaults to <code>false</code></p>
-<h3 id="-skip-db"><code>--skip-db</code></h3>
-<p>if present, creating a database is omitted. only the configuration structure is created and grunt is invoked</p>
-<p>defaults to <code>false</code></p>
-<h3 id="-db-backup-dir"><code>--db-backup-dir</code></h3>
-<p>specifies the folder where <em>autoconfig</em> looks for backup sql-files to restore at database creation of a site.</p>
-<p>defaults to <code>${HOME}/db_backup</code></p>
-<h3 id="-undeploy"><code>--undeploy</code></h3>
-<p>specifies that the site is <em>undeployed</em> and <em>autoconfig</em> dumps the database to <code>--db-backup-dir</code> before its user and the database itself is dropped.</p>
-<h3 id="-db-server"><code>--db-server</code></h3>
-<p>the specified value will be set as host that runs the db server. the value is ignored, if there is a configuration in the sites <em>autoconfig-json</em>, see <code>--configs</code>.
-it is also ignored, when <code>--skip-config</code> is specified and the <code>config.ini</code> entry for the database <em>autoconfig</em> creates the database from is present.</p>
-<h3 id="-db-client"><code>--db-client</code></h3>
-<p>the specified value will be set as host which the db server sees the db client as.</p>
-<p>this is not necessarily your vufind-client`s hostname but the ip - or hostname which
-the db-server resolves to that ip - which the client uses to connect to the db-server</p>
-<h3 id="-solr-url"><code>--solr-url</code></h3>
-<p>the specified value will be set as the url to the solr-index</p>
-<h3 id="-url"><code>--url</code></h3>
-<p>the specified value will be set as site-url/<site name> in config.ini</p>
-<h3 id="-update-defaults"><code>--update-defaults</code></h3>
-<p>creates the defaults file or updates if it exists. see <code>--configs</code>.</p>
+VUFIND_LOCAL_DIR environment variable in apache2 so vufind will use it as config folder</li>
+<li>
+<p><code>--db-backup-dir</code>: The folder for database-backups.</p>
+</li>
+<li>
+<p><code>--configs</code>: Specifies the folder where the configuration template is located which shall be
+set up. The filename has to be the name of the site prefixed by the extension <code>.json</code>.
+By default the folder <code>${HOME}/.autoconfig</code> is used.</p>
+</li>
+<li><code>--reuse-db</code>: if present, an existing database will be reused by creating a new dbuser as
+configured and grant him all required rights to access the existing database.
+Any existing users having access to that database will be untouched.
+Reusing an existing database imperatively depends on the right credentials for the database user.
+If the database user created by <em>autoconfig</em> is unable to connect to the database <em>autoconfig</em>
+will abort the process. Hint: <code>--db-client</code>. Defaults to <code>false</code>.</li>
+<li><code>--drop-db</code>: If present, an existing database will be dropped, a user deleted and a brand new
+database created. An appropriate user will be created as well.
+Reusing an existing database imperatively depends on the right credentials for the database user.
+If the database user created by <em>autoconfig</em> is unable to connect to the database <em>autoconfig</em>
+will abort the process. Hint: <code>--db-client</code>. Defaults to <code>false</code>.</li>
+<li><code>--hash-id</code>: If present, an unique md5-hash will be generated from basedir. this hash is used
+to identify the site by creating an autoconfig-json with this id and the site's database name
+and user. Defaults to <code>false</code></li>
+<li><code>--restore-db</code>: If present, <em>autoconfig</em> will look for a backup sql-file in the folder specified
+by <code>--db-backup-dir</code> after creating the database for the site. If a file for the site is found it
+is used to create a table structure, otherwise the vanilla sql-file is used. Defaults to <code>true</code>.</li>
+<li><code>--skip-config</code>: If present, creating a configuration structure based on inheritance premisses
+is omitted. Defaults to <code>false</code></li>
+<li><code>--skip-db</code>: If present, creating a database is omitted. only the configuration structure is
+created and grunt is invoked. Defaults to <code>false</code>.</li>
+<li><code>--db-backup-dir</code>: Specifies the folder where <em>autoconfig</em> looks for backup sql-files to restore
+at database creation of a site. Defaults to <code>${HOME}/db_backup</code>.</li>
+<li><code>--db-server</code>: The specified value will be set as host that runs the db server. the value is
+ignored, if there is a configuration in the sites <em>autoconfig-json</em>, see <code>--configs</code>. It is also
+ignored, when <code>--skip-config</code> is specified and the <code>config.ini</code> entry for the database <em>autoconfig</em>
+creates the database from is present.</li>
+<li><code>--db-client</code>: The specified value will be set as host which the db server sees the db client as.
+Tthis is not necessarily your vufind-client`s hostname but the ip - or hostname which the db-server
+resolves to that ip - which the client uses to connect to the db-server.</li>
+<li><code>--db-admin-user</code>: The administrative user that performes all database actions. Defaults to <code>root</code>.</li>
+<li><code>--db-admin-password</code>: The password of the administrative user. Defaults to none.</li>
+<li><code>--import-sql-file</code>: The relative path to <code>--base-dir</code> to the sql-file to import in case the
+database is created. Defaults to <code>module/VuFind/sql/mysql.sql</code>.</li>
+<li><code>--update-settings</code>: Creates the defaults file or updates if it exists. See <code>--configs</code>.
+Defaults to <code>false</code>
+<strong>Be aware that the option <code>--db-server</code> is only effective if there is no <code>config.ini</code> with an
+existing database configuration. Otherwise the already configured database-credentials are used.
+You could override them by specifying <code>--vf.config_ini.Database.database</code>, but this removes the
+ability to create a database by hash (see <code>--hash-id</code>).</strong></li>
+</ul>
+<p><strong>Be aware that you <em>always</em> have to specify <code>--db-client</code> if your database-server is not the same
+host as the php-server. This option is used for creating and removing the database-user and
+therefore not stored in any vufind configuration.</strong></p>
+<p><strong>Be aware that settings from parameters or environment variables take precedence over settings-files or <code>.my.cnf</code>.</strong></p>
+<h2 id="undeploy">Undeploy</h2>
+<p>Removes the database of a site. <em>Does not remove its configuration.</em></p>
+<pre><code>autoconfig vufind undeploy -s foo -i alpha
+</code></pre>
+
+<p><em>This creates a backup of the database of site foo</em></p>
 <h2 id="example">Example</h2>
-<p>lets say we want to set up the site <strong>foo</strong>. the <strong>staging</strong> folder of this site is named
+<p>lets say we want to set up the site <strong>foo</strong>. The <strong>staging</strong> folder of this site is named
 alike and is located in <code>/var/lib/vufind/</code>, the database-server and the ai-index url to use
 are the same for each site, the solr-url is different, so we specify that by adjusting
 the site's configuration later.</p>
 <p>the configurations do not exist, but we want to create them whilest processing.
 we would to so as following:</p>
-<pre><code>autoconfig vufind \
+<pre><code>autoconfig vufind deploy \
   -i staging \
+  -s foo
   -b /var/lib/vufind/foo \
-  --url https://staging.vufind.example.com/foo
+  --vf.config_ini.Site.url https://staging.vufind.example.com/foo \
   --db-server mysql.example.com \
-  --db-client staging.vufind.example.com \
-  foo
+  --db-client staging.vufind.example.com
 </code></pre>
+
 <p><em>autoconfig</em> now looks for all configuration files within <code>/var/lib/vufind/foo/foo/config/vufind/</code>
  and and language files within <code>/var/lib/vufind/foo/foo/languages/</code>.</p>
 <p>Config files which ends to <code>.ini</code> are considered do be inheritable and therefore <em>autoconfig</em>
@@ -175,50 +246,53 @@ we would to so as following:</p>
  some default values in the <em>staging</em> config files.</p>
 <p>because there is no configuration template for this site yet <em>autoconfig</em> creates one and
  writes all configuration values as json-object. the file looks like that</p>
-<pre><code>{
-  "DAIA.ini": {},
-  "FincILS.ini": {},
-  "HierarchyDefault.ini": {},
-  "SolrAI.ini": {},
-  "config.ini": {
-    "Database": {
-      "database": "mysql://vufind_foo:U57jeRyw8mT7Vl9v@mysql.example.com/vufind_foo"
+<pre><code class="json">{
+  &quot;DAIA.ini&quot;: {},
+  &quot;FincILS.ini&quot;: {},
+  &quot;HierarchyDefault.ini&quot;: {},
+  &quot;SolrAI.ini&quot;: {},
+  &quot;config.ini&quot;: {
+    &quot;Database&quot;: {
+      &quot;database&quot;: &quot;mysql://vufind_foo:U57jeRyw8mT7Vl9v@mysql.example.com/vufind_foo&quot;
     },
-    "Index": {
-      "url": "http://172.18.113.250:8080/solr"
+    &quot;Index&quot;: {
+      &quot;url&quot;: &quot;http://172.18.113.250:8080/solr&quot;
     },
-    "Authentication": {
-      "ils_encryption_key": "gef36739fc553b9c41e802g4c440eb0bba1cd326"
+    &quot;Authentication&quot;: {
+      &quot;ils_encryption_key&quot;: &quot;gef36739fc553b9c41e802g4c440eb0bba1cd326&quot;
     },
-    "Site": {
-      "url": "https://staging.vufind.example.com/foo"
+    &quot;Site&quot;: {
+      &quot;url&quot;: &quot;https://staging.vufind.example.com/foo&quot;
     }
   },
-  "facets.ini": {},
-  "searches.ini": {
-    "IndexShards": {
-      "ai": "ai.vufind.example.com/biblio"
+  &quot;facets.ini&quot;: {},
+  &quot;searches.ini&quot;: {
+    &quot;IndexShards&quot;: {
+      &quot;ai&quot;: &quot;ai.vufind.example.com/biblio&quot;
     },
-    "ShardPreferences": {
-      "showCheckboxes": true
+    &quot;ShardPreferences&quot;: {
+      &quot;showCheckboxes&quot;: true
     }
   }
 }
 </code></pre>
+
 <p>you can also see some configuration which is not defined by parameters at commandline.
 these are default values which appear to be required or useful.</p>
 <p>to change the configuration of the site simply edit the template and do another</p>
-<pre><code>autoconfig vufind \
+<pre><code>autoconfig vufind deploy \
   -i staging \
+  -s foo \
   -b /var/lib/vufind/foo \
-        --db-client staging.vufind.example.com \
+  --db-client staging.vufind.example.com \
   foo
 </code></pre>
+
 <p>since all configuration is now provided by the site template we do not need to provide
-configuration values by commandline parameters. <strong>in fact all configuration values from
-the site's configuration template have precedence of the commandline parameters.
-if you want autoconfig to take the values from commandline parameters you have to delete them
-from the configuration template first.</strong></p>
+configuration values by commandline parameters.</p>
+<p><strong>Be aware, that this is not the case for <code>--db-client</code>. If your VuFind is not on the same
+host as the mysql-server you have to specify the mysql-client so that the mysql-user is
+created apropriately. Otherwise VuFind will not be able to connect to the database-server.</strong></p>
 <h2 id="todo">Todo</h2>
 <ul>
 <li>support for yaml format</li>
