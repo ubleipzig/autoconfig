@@ -92,7 +92,7 @@
 ├── config
 │   └── vufind
 │       ├── config.ini
-        .
+|       .
 └── languages
     ├── de.ini
     ├── Ebsco
@@ -120,7 +120,7 @@
 ├── config
 │   └── vufind
 │       ├── config.ini
-        .
+|       .
 └── languages
     ├── de.ini
     ├── Ebsco
@@ -199,12 +199,12 @@ resolves to that ip - which the client uses to connect to the db-server.</li>
 <li><code>--import-sql-file</code>: The relative path to <code>--base-dir</code> to the sql-file to import in case the
 database is created. Defaults to <code>module/VuFind/sql/mysql.sql</code>.</li>
 <li><code>--update-settings</code>: Creates the defaults file or updates if it exists. See <code>--configs</code>.
-Defaults to <code>false</code>
-<strong>Be aware that the option <code>--db-server</code> is only effective if there is no <code>config.ini</code> with an
+Defaults to <code>false</code></li>
+</ul>
+<p><strong>Be aware that the option <code>--db-server</code> is only effective if there is no <code>config.ini</code> with an
 existing database configuration. Otherwise the already configured database-credentials are used.
 You could override them by specifying <code>--vf.config_ini.Database.database</code>, but this removes the
-ability to create a database by hash (see <code>--hash-id</code>).</strong></li>
-</ul>
+ability to create a database by hash (see <code>--hash-id</code>).</strong></p>
 <p><strong>Be aware that you <em>always</em> have to specify <code>--db-client</code> if your database-server is not the same
 host as the php-server. This option is used for creating and removing the database-user and
 therefore not stored in any vufind configuration.</strong></p>
