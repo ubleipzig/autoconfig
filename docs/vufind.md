@@ -6,7 +6,7 @@ mySite/
 ├── config
 │   └── vufind
 │       ├── config.ini
-        .
+|       .
 └── languages
     ├── de.ini
     ├── Ebsco
@@ -35,7 +35,7 @@ mySite/
 ├── config
 │   └── vufind
 │       ├── config.ini
-        .
+|       .
 └── languages
     ├── de.ini
     ├── Ebsco
@@ -119,6 +119,7 @@ resolves to that ip - which the client uses to connect to the db-server.
 database is created. Defaults to `module/VuFind/sql/mysql.sql`.
 * `--update-settings`: Creates the defaults file or updates if it exists. See `--configs`.
 Defaults to `false`
+
 **Be aware that the option `--db-server` is only effective if there is no `config.ini` with an
 existing database configuration. Otherwise the already configured database-credentials are used.
 You could override them by specifying `--vf.config_ini.Database.database`, but this removes the
@@ -213,18 +214,19 @@ these are default values which appear to be required or useful.
 
 to change the configuration of the site simply edit the template and do another
 ```
-autoconfig vufind \
+autoconfig vufind deploy \
   -i staging \
+  -s foo \
   -b /var/lib/vufind/foo \
   --db-client staging.vufind.example.com \
   foo
 ```
 since all configuration is now provided by the site template we do not need to provide
-configuration values by commandline parameters. **in fact all configuration values from
-the site's configuration template have precedence of the commandline parameters.
-if you want autoconfig to take the values from commandline parameters you have to delete them
-from the configuration template first.**
+configuration values by commandline parameters.
 
+**Be aware, that this is not the case for `--db-client`. If your VuFind is not on the same
+host as the mysql-server you have to specify the mysql-client so that the mysql-user is
+created apropriately. Otherwise VuFind will not be able to connect to the database-server.**
 
 ## Todo
 
