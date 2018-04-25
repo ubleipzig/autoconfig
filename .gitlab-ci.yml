@@ -25,18 +25,23 @@ npm_run_ci:
     - .npm
   tags:
   - docker
+  except:
+  - tags
 
 
 npm_publish:
   stage: publish
   image: node:8
-  only:
-  - master
   script:
   - 'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
   - npm publish
   tags:
   - docker
+  only:
+  - /^release\//
+  except:
+  - branches
+
   cache:
     key: "${CI_PROJECT_ID}"
     paths:
@@ -46,9 +51,11 @@ gh_pages:
   stage: publish
   image: squidfunk/mkdocs-material
   only:
-  - master
+  - /^master/
   script: |
     mkdocs gh-deploy
+  tags:
+  - docker
 
 github_mirror:
   stage: mirror
