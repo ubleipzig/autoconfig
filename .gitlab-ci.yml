@@ -1,9 +1,7 @@
 stages:
   - test
   - publish
-
-variables:
-  npm_config_registry: https://services.ub.uni-leipzig.de/nexus/repository/npm/
+  - mirror
 
 npm_run_ci:
   stage: test
@@ -35,7 +33,7 @@ npm_publish:
   only:
   - master
   script:
-  - 'echo "//services.ub.uni-leipzig.de/nexus/repository/npm-ubl/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
+  - 'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
   - npm publish
   tags:
   - docker
@@ -43,3 +41,29 @@ npm_publish:
     key: "${CI_PROJECT_ID}"
     paths:
     - .npm
+
+gh_pages:
+  stage: publish
+  image: squidfunk/mkdocs-material
+  only:
+  - master
+  script: |
+    mkdocs gh-deploy
+
+github_mirror:
+  stage: mirror
+  image:
+    name: alpine/git
+    entrypoint: [ "/bin/sh", "-c" ]
+  variables:
+    GIT_STRATEGY: clone
+    GIT_CHECKOUT: "false"
+  script: |
+    cd /tmp
+    git clone --mirror ${CI_REPOSITORY_URL} project
+    cd project
+    git remote add github https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/ubleipzig/autoconfig.git
+    git push --mirror github
+  tags:
+  - docker
+

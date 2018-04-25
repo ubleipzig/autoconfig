@@ -14,7 +14,7 @@ the currently supported software is [vufind][1]
 this package is not part of the public npm-registry. its published to the private registry
 of the university library of leipzig. use this registry as follows:
 
-    npm --registry https://services.ub.uni-leipzig.de/nexus/repository/npm install -g autoconfig
+    npm i -g @ubleipzig/autoconfig
 
 it is recommended to install it as superuser, but it is advised to be run as non-root
 though.

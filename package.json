@@ -1,10 +1,7 @@
 {
-  "name": "autoconfig",
-  "version": "2.1.0",
+  "name": "@ubleipzig/autoconfig",
+  "version": "2.1.1",
   "description": "generates config for deployed instances",
-  "publishConfig": {
-    "registry": "https://services.ub.uni-leipzig.de/nexus/repository/npm-ubl/"
-  },
   "scripts": {
     "test": "VF_env_ini__My_SpecialSection__special_key=\"generic string\" mocha",
     "test-inspect": "VF_env_ini__My_SpecialSection__special_key=\"generic string\" mocha --inspect-brk=0.0.0.0:9229",
@@ -17,7 +14,7 @@
     "autoconfig": "lib/cli.js"
   },
   "author": "Ulf Seltmann <ulf.seltmann@uni-leipzig.de>",
-  "license": "GPL-3.0-or-later",
+  "license": "GPL-3.0",
   "dependencies": {
     "commander": "2.11.0",
     "mkdirp": "0.5.1",
@@ -43,5 +40,18 @@
     "npm-check-updates": "2.12.1",
     "rimraf": "2.5.2",
     "should": "11.2.1"
-  }
+  },
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.sc.uni-leipzig.de:ubl/bdd_dev/autoconfig.git"
+  },
+  "keywords": [
+    "vufind"
+  ]
 }
