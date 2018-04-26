@@ -35,7 +35,7 @@ npm_publish:
   image: node:8
   script:
   - 'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
-  - npm publish
+  - npm publish --access public
   tags:
   - docker
   only:
