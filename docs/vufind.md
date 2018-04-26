@@ -1,6 +1,6 @@
 # autoconfig vufind
 
-Set up a vufind instance without having config files created or edited manually. *autoconfig* assumes that you have an initial configuration structure in the folder specified by `--basedir`, e.g.:
+Set up a VuFind instance without having config files created or edited manually. *autoconfig* assumes that you have an initial configuration structure in the folder specified by `--basedir`, e.g.:
 ```
 mySite/
 ├── config
@@ -59,25 +59,24 @@ export VF_config_ini__Site__title="My Awesome VuFind"
 _Both examples will add or overwrite the key `title` in section `Site` in config-file `config.ini`_
 
 
-## deploy
-To set up a vufind instance it has to follow some rules (although i tried to make it
+## Deploy
+To set up a VuFind instance it has to follow some rules (although i tried to make it
 as flexible as possible)
 
 ### Usage
 
-    autoconfig vufind deploy -s mySite -i live
+    autoconfig vufind deploy --site mySite --instance live
 
 will set up VuFind, assuming your installation lies under `/usr/local/vufind` and you have an configuration-folder `mySite`in there.
 
 ### Options
 
 * `--site`: The name of the site to set up. Required.
-* `--instance`: The instance to deploy. Required, choose from *alpha*, *staging', *live*.
-* `--basedir`: Will set the folder where the vufind-app is located. By default the
+* `--basedir`: Will set the folder where the VuFind-app is located. By default the
 folder `/usr/local/vufind/` is used.
 * `--instance`: Will set which instance is deployed. This is really just the name of the folder,
 where autoconfig saves all new config files in and which you have to set as
-VUFIND_LOCAL_DIR environment variable in apache2 so vufind will use it as config folder
+VUFIND_LOCAL_DIR environment variable for PHP so VuFind will use it as config folder
 * `--db-backup-dir`: The folder for database-backups.
 
 * `--configs`: Specifies the folder where the configuration template is located which shall be
@@ -111,7 +110,7 @@ ignored, if there is a configuration in the sites *autoconfig-json*, see `--conf
 ignored, when `--skip-config` is specified and the `config.ini` entry for the database *autoconfig*
 creates the database from is present.
 * `--db-client`: The specified value will be set as host which the db server sees the db client as.
-Tthis is not necessarily your vufind-client`s hostname but the ip - or hostname which the db-server
+Tthis is not necessarily your VuFind-client`s hostname but the ip - or hostname which the db-server
 resolves to that ip - which the client uses to connect to the db-server.
 * `--db-admin-user`: The administrative user that performes all database actions. Defaults to `root`.
 * `--db-admin-password`: The password of the administrative user. Defaults to none.
@@ -127,7 +126,7 @@ ability to create a database by hash (see `--hash-id`).**
 
 **Be aware that you *always* have to specify `--db-client` if your database-server is not the same
 host as the php-server. This option is used for creating and removing the database-user and
-therefore not stored in any vufind configuration.**
+therefore not stored in any VuFind configuration.**
 
 **Be aware that settings from parameters or environment variables take precedence over settings-files or `.my.cnf`.**
 
@@ -135,7 +134,7 @@ therefore not stored in any vufind configuration.**
 
 Removes the database of a site. *Does not remove its configuration.*
 ```
-autoconfig vufind undeploy -s foo -i alpha
+autoconfig vufind undeploy --site foo --instance alpha
 ```
 _This creates a backup of the database of site foo_
 
@@ -150,9 +149,9 @@ the configurations do not exist, but we want to create them whilest processing.
 we would to so as following:
 ```
 autoconfig vufind deploy \
-  -i staging \
-  -s foo
-  -b /var/lib/vufind/foo \
+  --instance staging \
+  --site foo
+  --basedir /var/lib/vufind/foo \
   --vf.config_ini.Site.url https://staging.vufind.example.com/foo \
   --db-server mysql.example.com \
   --db-client staging.vufind.example.com
@@ -163,7 +162,7 @@ autoconfig vufind deploy \
 
  Config files which ends to `.ini` are considered do be inheritable and therefore *autoconfig*
  creates new files in `/var/lib/vufind/foo/foo/staging/config/vufind/` with the same name
- and a parent-config setting as vufind supports it, which inherits the related config-file.
+ and a parent-config setting as VuFind supports it, which inherits the related config-file.
 
  The next step is to create a database according to the specified credentials. since there
  are none specified (which is for now only possible by providing a configuration template,
@@ -215,9 +214,9 @@ these are default values which appear to be required or useful.
 to change the configuration of the site simply edit the template and do another
 ```
 autoconfig vufind deploy \
-  -i staging \
-  -s foo \
-  -b /var/lib/vufind/foo \
+  --instance staging \
+  --site foo \
+  --basedir /var/lib/vufind/foo \
   --db-client staging.vufind.example.com \
   foo
 ```
