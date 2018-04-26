@@ -77,6 +77,3 @@ github_mirror:
     git push --mirror github
   tags:
   - docker
-  only:
-  - /^gh-pages/
-
