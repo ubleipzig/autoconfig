@@ -49,7 +49,9 @@ npm_publish:
 
 gh_pages:
   stage: publish
-  image: squidfunk/mkdocs-material
+  image:
+    name: squidfunk/mkdocs-material:2.7.2
+    entrypoint: [ "/bin/sh", "-c" ]
   only:
   - /^master/
   script: |
