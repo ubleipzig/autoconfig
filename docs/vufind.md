@@ -102,7 +102,7 @@ is used to create a table structure, otherwise the vanilla sql-file is used. Def
 * `--skip-config`: If present, creating a configuration structure based on inheritance premisses
 is omitted. Defaults to `false`
 * `--skip-db`: If present, creating a database is omitted. only the configuration structure is
-created and grunt is invoked. Defaults to `false`.
+created. Defaults to `false`.
 * `--db-backup-dir`: Specifies the folder where *autoconfig* looks for backup sql-files to restore
 at database creation of a site. Defaults to `${HOME}/db_backup`.
 * `--db-server`: The specified value will be set as host that runs the db server. the value is
