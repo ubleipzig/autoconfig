@@ -98,7 +98,7 @@ to identify the site by creating an autoconfig-json with this id and the site's 
 and user. Defaults to `false`
 * `--restore-db`: If present, *autoconfig* will look for a backup sql-file in the folder specified
 by `--db-backup-dir` after creating the database for the site. If a file for the site is found it
-is used to create a table structure, otherwise the vanilla sql-file is used. Defaults to `true`.
+is used to create a table structure, otherwise the vanilla sql-file is used. Defaults to `false`.
 * `--skip-config`: If present, creating a configuration structure based on inheritance premisses
 is omitted. Defaults to `false`
 * `--skip-db`: If present, creating a database is omitted. only the configuration structure is

@@ -22,6 +22,6 @@ services:
     depends_on:
       - db
   db:
-    image: mysql:latest
+    image: mariadb:10
     environment:
       MYSQL_ROOT_PASSWORD: adminpw

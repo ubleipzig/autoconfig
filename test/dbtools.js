@@ -232,7 +232,7 @@ describe('dbtools', function () {
 				it('should overwrite the existing backup-file', function (done) {
 					dbtools.removeDb('mysql://testuser:testpasswd@db/testdb').then(function () {
 						fs.existsSync(path.join(options.backupDir, 'testdb.sql')).should.be.true();
-						fs.statSync(path.join(options.backupDir, 'testdb.sql')).size.should.eql(7123);
+						fs.statSync(path.join(options.backupDir, 'testdb.sql')).size.should.eql(7193);
 						rootConnection.query('SHOW DATABASES WHERE `Database` = "testdb"', function (err, res) {
 							if (err) return done(err);
 							res.length.should.eql(0);
