@@ -56,7 +56,7 @@ gh_pages:
   only:
   - /^master/
   script: |
-    git remote set-url origin https://${GITLAB_USER}:${GITLAB_TOKEN}@git.sc.uni-leipzig.de/ubl/bdd_dev/autoconfig.git
+    git remote set-url origin https://${GITLAB_USER}:${GITLAB_TOKEN}@git.sc.uni-leipzig.de/ubl/bdd_dev/webmasterei/autoconfig.git
     mkdocs gh-deploy
   tags:
   - docker
