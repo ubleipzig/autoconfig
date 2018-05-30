@@ -7,7 +7,7 @@ npm_run_ci:
   stage: test
   image: node:8
   services:
-  - name: mysql:5.7
+  - name: mariadb:10
     alias: db
   script:
   - test -d .npm && mv .npm ${HOME}
