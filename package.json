@@ -1,6 +1,6 @@
 {
   "name": "@ubleipzig/autoconfig",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "generates config for deployed instances",
   "scripts": {
     "test": "VF_env_ini__My_SpecialSection__special_key=\"generic string\" mocha",
