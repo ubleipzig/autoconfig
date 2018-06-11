@@ -1,6 +1,6 @@
 {
   "name": "@ubleipzig/autoconfig",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "generates config for deployed instances",
   "scripts": {
     "test": "VF_env_ini__My_SpecialSection__special_key=\"generic string\" mocha",
@@ -8,7 +8,8 @@
     "ci": "VF_env_ini__My_SpecialSection__special_key=\"generic string\" istanbul cover _mocha -- --timeout 10000",
     "ncu": "ncu",
     "lint": "eslint",
-    "ci-publish": "ci-publish"
+    "ci-publish": "ci-publish",
+    "npm-check": "npm-check"
   },
   "bin": {
     "autoconfig": "lib/cli.js"
@@ -16,30 +17,29 @@
   "author": "Ulf Seltmann <ulf.seltmann@uni-leipzig.de>",
   "license": "GPL-3.0",
   "dependencies": {
-    "commander": "2.11.0",
+    "commander": "^2.15.1",
     "mkdirp": "0.5.1",
-    "multi-ini": "1.0.1",
-    "mysql": "2.13.0",
+    "multi-ini": "^2.0.0",
+    "mysql": "^2.15.0",
     "mysqldump": "1.4.2",
     "nconf": "^0.10.0",
-    "password-generator": "2.1.0",
-    "q": "1.5.0",
-    "recursive-readdir": "2.2.1",
-    "underscore": "1.8.3",
+    "password-generator": "^2.2.0",
+    "q": "^1.5.1",
+    "recursive-readdir": "^2.2.2",
+    "underscore": "^1.9.1",
     "yargs": "^11.0.0"
   },
   "devDependencies": {
     "cp": "0.2.0",
     "debug": "^3.1.0",
-    "eslint": "4.1.1",
+    "eslint": "^4.19.1",
     "istanbul": "0.4.5",
-    "mocha": "3.4.2",
-    "mocha-jenkins-reporter": "0.3.8",
+    "mocha": "^5.2.0",
     "node-cp": "0.1.1",
-    "node-dir": "0.1.16",
-    "npm-check-updates": "2.12.1",
-    "rimraf": "2.5.2",
-    "should": "11.2.1"
+    "node-dir": "^0.1.17",
+    "npm-check": "^5.7.1",
+    "rimraf": "^2.6.2",
+    "should": "^13.2.1"
   },
   "main": "index.js",
   "directories": {

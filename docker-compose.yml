@@ -16,7 +16,7 @@ services:
       VF_config_ini__Database__database: mysql://vufind:vufindpw@db/vufind
       VF_config_ini__Index__url: http://solr:8983
     command:
-      - "npm test"
+      - "sleep 10 && npm test"
     depends_on:
       - db
   db:
