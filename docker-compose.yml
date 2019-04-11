@@ -7,7 +7,6 @@ services:
       - ../../php/vufind2:/usr/local/vufind
     ports:
       - "127.0.0.1:9229:9229"
-      - "127.0.0.1:5858:5858"
     working_dir: /app
     environment:
       VUFIND_SITE: local
@@ -23,3 +22,8 @@ services:
     image: mariadb:10
     environment:
       MYSQL_ROOT_PASSWORD: adminpw
+
+networks:
+  default:
+    external:
+      name: folio
