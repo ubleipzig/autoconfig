@@ -35,7 +35,8 @@ var _ = require('underscore'),
 	cp = require('node-cp'),
 	ini = require('multi-ini'),
 	configtools = require('../lib/vufind/configtools'),
-	should = require('should');
+	should = require('should'),
+	yaml = require('js-yaml');
 
 describe('vufind', function () {
 
@@ -59,7 +60,17 @@ describe('vufind', function () {
 				'Database': {
 					'database': 'mysql://testdbuser:testdbpass@testdbserver/testdb'
 				}
-			}
+			},
+			'foreignCopyChild.yml': {
+				'@parent_yaml': 'foreignCopy.yml',
+				'DeweyBrowse': {
+					'QueryFields': {
+						'dewey-raw': [
+							null, 'onephrase'
+						]
+					}
+				}
+			},
 		}
 	};
 
@@ -324,6 +335,15 @@ describe('vufind', function () {
 					configIni.Site.should.have.properties('url', 'customVar');
 					configIni.Site.url.should.eql('http://example.com');
 					configIni.Site.customVar.should.eql('"customValue"');
+					done();
+				});
+
+				it('should override the yml-files', function (done) {
+					let childYmlString = fs.readFileSync(`${instanceConfigDir}/foreignCopyChild.yml`, 'utf8');
+					let childYmlObject = yaml.safeLoad(childYmlString);
+					childYmlObject.should.have.properties('@parent_yaml', 'DeweyBrowse');
+					childYmlObject['@parent_yaml'].should.eql('foreignCopy.yml');
+					childYmlObject.DeweyBrowse.QueryFields.should.eql({'dewey-raw': [null, 'onephrase']});
 					done();
 				});
 

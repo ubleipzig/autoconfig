@@ -18,6 +18,7 @@
   "license": "GPL-3.0",
   "dependencies": {
     "commander": "^2.15.1",
+    "js-yaml": "^3.14.0",
     "mkdirp": "0.5.1",
     "multi-ini": "^2.0.0",
     "mysql": "^2.15.0",
