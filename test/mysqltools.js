@@ -34,7 +34,7 @@ var fs = require('fs');
 require('should');
 
 var dbClient;
-exec('ip route show | grep -e "eth0  proto" | awk -F" " \'{ print $9 }\'', function (err, stdout) {
+exec('ip route show | grep -e "eth0 proto" | awk -F" " \'{ print $9 }\'', function (err, stdout) {
 	dbClient = stdout.trim();
 });
 describe('mysqltools', function () {
