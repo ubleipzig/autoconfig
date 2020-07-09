@@ -34,7 +34,7 @@ npm_publish:
   stage: publish
   image: node:10
   script:
-  - 'echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
+  - 'echo "always-auth=true\n@ubleipzig:registry=https://registry.npmjs.org\n//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
   - npm publish --access public
   tags:
   - docker
