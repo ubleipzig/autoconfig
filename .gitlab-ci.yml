@@ -1,5 +1,6 @@
 stages:
   - test
+  - bundle
   - publish
   - mirror
 
@@ -29,24 +30,45 @@ npm_run_ci:
   - tags
   - /^gh-pages/
 
-
-npm_publish:
-  stage: publish
-  image: node:10
+npm_pack:
+  stage: bundle
+  image:
+    name: node:10-alpine
+    entrypoint: ["/bin/su", "node", "-c"]
   script:
-  - 'echo "always-auth=true\n@ubleipzig:registry=https://registry.npmjs.org\n//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc'
-  - npm publish --access public
-  tags:
-  - docker
-  only:
-  - /^release\//
-  except:
-  - branches
-
+  - npm pack
   cache:
     key: "${CI_PROJECT_ID}"
     paths:
     - .npm
+  artifacts:
+    name: npm-pack
+    paths:
+    - '*.tgz'
+  tags:
+    - docker
+
+npm_publish:
+  stage: publish
+  image:
+    name: node:10-alpine
+    entrypoint: ["/bin/su", "node", "-c"]
+  script: |
+    test "${NPM_TOKEN}" == "" && echo "no npm token found" && false
+    echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+    npm publish *.tgz --access public
+  dependencies:
+  - npm_pack
+  cache:
+    key: "${CI_PROJECT_ID}"
+    paths:
+    - .npm
+  except:
+    - branches
+  only:
+    - /^release\/.*/
+  tags:
+    - docker
 
 gh_pages:
   stage: publish
