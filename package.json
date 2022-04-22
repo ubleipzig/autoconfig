@@ -23,7 +23,7 @@
     "multi-ini": "^2.0.0",
     "mysql": "^2.15.0",
     "mysqldump": "1.4.2",
-    "nconf": "^0.10.0",
+    "nconf": "^0.11.4",
     "password-generator": "^2.2.0",
     "q": "^1.5.1",
     "recursive-readdir": "^2.2.2",
